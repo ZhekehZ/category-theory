@@ -158,6 +158,14 @@ $ \exists \pi_1 : A \times B \to A \Rightarrow \exists! K : A \to A^B $
 \item Одна из аксиом арифметики Пеано говорит, что функция $\suc$ должна быть инъективной.
 Докажите, что в любой декартово замкнутой категории с объектом натуральных чисел морфизм $\suc$ является расщепленным мономорфизмом.
 
+Рассмотрим диаграмму
+\[ \xymatrix{ 
+1 \ar[dr]_{\langle zero, zero\rangle} \ar[r]^{zero} & \mathbb{N} \ar[d]^{\exists! h} \ar[r]^{suc} & \mathbb{N}\ar[d]^{\exists! h} \\
+& \mathbb{N} \times \mathbb{N}  \ar[r]_{\langle \pi_2, suc \circ \pi_2\rangle} & \mathbb{N} \times \mathbb{N} 
+            } \]
+Тогда $h$ имеет вид $\langle f, id\rangle$. $\langle f\circ suc, suc \rangle = \langle id , suc \rangle$\\
+Получается, что $f \circ suc = id$
+
 \item Одна из аксиом арифметики Пеано говорит, что ни для какого $x$ не верно, что $\zero = \suc(x)$.
 В произвольной декартово замкнутой категории это может быть верно, но только если она является категорией предпорядка.
 Докажите, что следующие утверждения эквивалентны.
@@ -171,6 +179,10 @@ $ \exists \pi_1 : A \times B \to A \Rightarrow \exists! K : A \to A^B $
 
 \item Докажите, что если в декартово замкнутой категории существует все малые копроизведения, то в ней существует объект натуральных чисел.
 
+Положим $\mathbb{N} =  \amalg_i 1_i$, $zero = inj_1$. $suc$ --- уникальная стрелка такая, что $suc \circ inj_i = inj_{i + 1}$.\\
+Пусть есть $f : 1 \to A, ~~g : A \to A$. Тогда положим $f_0 = f, f_{i + 1} = g \circ f_i$ и возьмем уникальную стрелку $t: \mathbb{N} \to A $ из определения копроизведения ($t \circ inj_{i - 1} = f_i$). Тогда диаграмма для $\mathbb{N} $ коммутирует.\\
+Пусть есть другая стрелка $h$. Тогда $h \circ zero = f_0, ~~h \circ inj_{i + 1} = h \circ s \circ inj_i = g \circ h \circ inj_i = g \circ f_i = f_{i + 1} = t \circ inj_{n+1}$\\
+Получается, что $\forall i: h \circ inj_{n+1} = t \circ inj_{n+1}$. Так как $t$ --- стрелка из определения копроизведения, то отсюда следует, что  $h = t$.
 \item Определите в произвольной декартово замкнутой категории с объектом натуральных чисел морфизм сложения $+ : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$, удовлетворяющий следующим условиям:
 \[ \xymatrix{ \mathbb{N} \ar[d]_{\langle \zero \circ !_\mathbb{N}, id_\mathbb{N} \rangle} \ar[rd]^{id_\mathbb{N}} \\
               \mathbb{N} \times \mathbb{N} \ar[r]_-{+} & \mathbb{N}
