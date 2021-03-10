@@ -1,0 +1,204 @@
+\documentclass[draft]{article}
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{cmap}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage[all]{xy}
+\usepackage{bussproofs}
+
+\newcommand{\cat}[1]{\mathbf{#1}}
+\renewcommand{\C}{\cat{C}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\Grp}{\cat{Grp}}
+\newcommand{\Ab}{\cat{Ab}}
+\newcommand{\Hask}{\cat{Hask}}
+\newcommand{\Mat}{\cat{Mat}}
+\newcommand{\Num}{\cat{Num}}
+
+\newcommand{\im}{\mathrm{Im}}
+\newcommand{\bool}{\mathrm{Bool}}
+\newcommand{\true}{\mathrm{true}}
+\newcommand{\false}{\mathrm{false}}
+\newcommand{\andb}{\mathrm{and}}
+\newcommand{\orb}{\mathrm{or}}
+\newcommand{\inj}{\mathrm{inj}}
+
+\newcommand{\ev}{\mathrm{ev}}
+\newcommand{\zero}{\mathrm{zero}}
+\newcommand{\suc}{\mathrm{suc}}
+\newcommand{\rec}{\mathrm{rec}}
+
+\newenvironment{tolerant}[1]{\par\tolerance=#1\relax}{\par}
+
+\begin{document}
+
+\title{Задания}
+\maketitle
+
+\begin{enumerate}
+
+\item При каких условиях в категории (пред)порядка существует булевский объект?
+
+\item Приведите пример нетривиальной категории порядка, являющейся декартово замкнутой.
+
+Пусть объекты --- логические формулы (в какой-нибудь логике). Определим $x \leq y$ как выполнение $x$ влечет выполнение $y$, а произведение как конъюнкцию. Тогда $\forall X, Y: ~~X^Y = XYto X$, где "$\to$"\  есть импликация. $ev = X^Y\times Y \leq X$. Если $X^Y\times Y$ выполнимо, то $X$ выполнимо по Modus ponens. Кроме того, если $\Gamma \land A \to B$, то $\Gamma \to (A \to B)$. Он единственный по построению, а значит экспонента определена верно. 
+
+\item Давайте докажем, что категории моноидов, групп и абелевых групп не являются декартово замкнутыми.
+\begin{enumerate}
+\item Докажите, что если в декартово замкнутой категории есть начальный объект, то он строгий.
+\item Объект называется \emph{нулевым}, если он одновременно начальный и терминальный.
+Докажите, что если в категории есть нулевой объект и начальный объект строгий, то эта категория тривиальна (то есть в ней между любой парой объектов существует уникальная стрелка).
+\item Докажите, что в категориях, упомянутых в задании, есть нулевой объект и сделайте вывод, что они не декартово замкнуты.
+\end{enumerate}
+\textit{Решение}
+\begin{enumerate}
+\item[(c)] Во всех этих категориях есть объект, состоящий из одного нейтрального элемента. Он и будет нулевым. Так как нейтральный должен переходить в нейтральный, то отображение из него в другие объекты единственно. Обратное тоже верно --- все отображается в 0. Очевидно, что 0 не строгий, так как ядро у композиции отображений между 0 и некоторым объектом будет совпадать с тем объектом. Значит эти категории не декартово замкнуты.
+\end{enumerate}
+
+\item Пусть в категории $\C$ есть все конечные произведения и булевский объект.
+Сконструируйте в $\C$ морфизмы $\andb, \orb : \bool \times \bool \to \bool$, такие что следующие диаграммы коммутируют
+\[ \xymatrix{ 1 \ar[d]_{\langle \true, \true \rangle} \ar[rd]^{\true} \\
+              \bool \times \bool \ar[r]_-{\andb} & \bool
+            }
+\qquad \xymatrix{ 1 \ar[d]_{\langle \true, \true \rangle} \ar[rd]^{\true} \\
+              \bool \times \bool \ar[r]_-{\orb} & \bool
+            } \]
+\[ \xymatrix{ 1 \ar[d]_{\langle \true, \false \rangle} \ar[rd]^{\false} \\
+              \bool \times \bool \ar[r]_-{\andb} & \bool
+            }
+\qquad \xymatrix{ 1 \ar[d]_{\langle \true, \false \rangle} \ar[rd]^{\true} \\
+              \bool \times \bool \ar[r]_-{\orb} & \bool
+            } \]
+\[ \xymatrix{ 1 \ar[d]_{\langle \false, \true \rangle} \ar[rd]^{\false} \\
+              \bool \times \bool \ar[r]_-{\andb} & \bool
+            }
+\qquad \xymatrix{ 1 \ar[d]_{\langle \false, \true \rangle} \ar[rd]^{\true} \\
+              \bool \times \bool \ar[r]_-{\orb} & \bool
+            } \]
+\[ \xymatrix{ 1 \ar[d]_{\langle \false, \false \rangle} \ar[rd]^{\false} \\
+              \bool \times \bool \ar[r]_-{\andb} & \bool
+            }
+\qquad \xymatrix{ 1 \ar[d]_{\langle \false, \false \rangle} \ar[rd]^{\false} \\
+              \bool \times \bool \ar[r]_-{\orb} & \bool
+            } \]
+
+\item Мы видели, что объекты $2$ и $1$ могут быть изоморфны. Если $2$ является булевским объектом, то это все равно может произойти, но эту ситуацию легко отследить.
+
+Пусть $\C$ -- категория с конечными произведениями.
+Докажите, что следующие утверждения эквивалентны:
+\begin{enumerate}
+\item $\C$ -- категория предпорядка.
+\item В $\C$ терминальный объект является булевским.
+\item В $\C$ существует булевский объект, такой что $\true = \false$.
+\end{enumerate}
+
+\textit{Решение}
+\begin{itemize}
+\item[$a\Rightarrow b)$] Так как в категории предпорядка морфизм между двумя объектами единственный, то можно взять $Bool = 1, true = false = id$. Тогда $\forall f, g : A \to B ~~\exists h = f \circ \pi_2$
+\item[$b\Rightarrow c)$] В терминальный объект существует только одна стрелка
+\item[$c\Rightarrow a)$] В определении Bool $\langle true \circ !, id \rangle = \langle false \circ !, id \rangle$. Значит для любых 
+\end{itemize}
+
+\item Докажите, что в любой декартово замкнутой категории $\C$ выполнены следующие утверждения:
+\begin{enumerate}
+\item Для любого объекта $A$ существует изоморфизм $A^1 \simeq A$.\\
+Пусть есть стрелка $f: A \times 1 \to B$. Тогда всегда существует уникальная стрелка $A \times 1 \to B \times 1$ --- $\langle f, id\rangle$ такая, что $\pi_1 \circ \langle f, id\rangle = f$. Значит пара $(B, \pi_1)$ является эеспонентой $B^1$ (по определению экспоненты). То есть $B^1 \simeq B$
+\item Для любых объектов $A$, $B$ и $C$ существует изоморфизм $A^{B \times C} \simeq (A^B)^C$.\\
+
+$ev_1 : A^{B\times C}\times (B \times C) \to A$\\
+$(A^{B\times C}\times C) \times B \to A$\\
+$A^{B\times C}\times C \to A^B$\\
+$A^{B\times C} \to (A^B)^C$\\
+\\
+$ev_2 : (A^B)^C\times C\to A^B$\\
+$((A^B)^C\times C)\times B \to A$\\
+$(A^B)^C\times (B\times C) \to A$\\
+$(A^B)^C \to A^{B\times C}$\\
+
+\item Умножение дистрибутивно над сложением, то есть для любых объектов $A$, $B$ и $C$ морфизм
+\[ [\langle \pi_1, \inj_1 \circ \pi_2 \rangle, \langle \pi_1, \inj_2 \circ \pi_2 \rangle ] : (A \times B) \amalg (A \times C) \to A \times (B \amalg C) \]
+является изоморфизмом, где $\inj_1 : B \to B \amalg C$ и $\inj_2 : C \to B \amalg C$ -- канонические морфизмы копроизведения, и
+если $f : B \to X$, $g : C \to X$, то $[f,g] : B \amalg C \to X$ -- уникальный морфизм, удовлетворяющий $[f,g] \circ \inj_1 = f$ и $[f,g] \circ \inj_2$.\\
+
+$Hom((A \times C) \amalg (B \times C), D) \simeq
+Hom(A \times C, D) \amalg Hom(B \times C, D) \simeq\\
+\simeq Hom(A, D^C) \amalg Hom(B, D^C) \simeq
+Hom(A \amalg B, D^C) \simeq \\\simeq  Hom((A \amalg B) \times C, D)$
+
+То есть, если есть стрелки $A\times C \to D, B\times C \to D$, то есть уникальная стрелка $(A\times C)\amalg (B\times C) \to D$. Но тогда есть стрелок из $A\times C$ и $B\times C$ в $(A \amalg B) \times C$ (объявленных через композицию пары истекок из определения копроизведения + стелки из условия). Кроме того, существует стрелка из $ Hom((A \amalg B) \times C, D)$ такая, что диаграмма для копроизведения коммутирует. Значит по универсальному свойству, $(A \times B) \amalg (A \times C) \simeq A \times (B \amalg C)$
+
+\item Если в $\C$ существует начальный объект 0, то для любого объекта $A$ существует изоморфизм $A^0 \simeq 1$.\\
+$\forall X: Hom(X, A^0) \simeq Hom(X \times 0, A)\simeq Hom(0, A) \Rightarrow \\\Rightarrow \forall X |Hom(X, A^0)| = 1\Rightarrow A^0 = 1$
+\item Если в $\C$ существует копроизведение $B \amalg C$, то для любого объекта $A$ существует изоморфизм $A^{B \amalg C} \simeq A^B \times A^C$.\\
+$A^{B \amalg C}\times (B \amalg C) \to A $\\
+$(B \times A^{B \amalg C})\amalg( A^{B \amalg C} \times C) \to A $\\
+$(A^{B \amalg C} \times B) \to A, ( A^{B \amalg C} \times C) \to A $\\
+$A^{B \amalg C} \to A^B, A^{B \amalg C} \to A^C $\\
+$A^{B \amalg C} \to A^B \times A^C $\\
+\\
+$A^B\times A^C \to A^{B\amalg C}$\\
+\end{enumerate}
+
+
+\item Докажите, что в декартово замкнутой категории объект $2$ всегда является булевским.
+
+$2 \times A = (1 \amalg 1)\times A \simeq
+(1 \times A)\amalg (1 \times A) \simeq A\amalg A$\\
+Тогда в определении для Bool можно взять стрелку из определения копроизведения $f, g$. Она будет уникальной по универсальному свойству копроизведения.
+
+\item Определите в произвольной декартово замкнутой категории комбинаторы $K$ и $S$, то есть следующие морфизмы:
+\begin{align*}
+K & : A \to A^B \\ 
+S & : (C^B)^A \to (C^A)^{(B^A)}
+\end{align*}
+\begin{itemize}
+\item
+$ \exists \pi_1 : A \times B \to A \Rightarrow \exists! K : A \to A^B $
+\item
+Есть стрелка $ev_1: B^A\times A \to B$\\
+Есть стрелка $ev_2: (C^B)^A \times A \to C^B$\\
+Есть стрелка $ev_3: C^B \times B \to C$\\
+Значит есть стрелка $(C^B)^A \times B^A \times A \to C$\\
+Ее можно построить так: $(C^B)^A \times B^A \times A \to (C^B)^A \times B^A \times A\times A \to\\
+\to ((C^B)^A\times A) \times (B^A \times A) \to C^B \times B \to C$\\
+(так как категория декартова, все переходу существуют)\\
+Тогда существует уникальная стрелка $(C^B)^A \times B^A \to C^A$\\
+Тогда существует уникальная стрелка $(C^B)^A \to (C^A)^{(B^A )}$
+\end{itemize}
+
+\item Одна из аксиом арифметики Пеано говорит, что функция $\suc$ должна быть инъективной.
+Докажите, что в любой декартово замкнутой категории с объектом натуральных чисел морфизм $\suc$ является расщепленным мономорфизмом.
+
+\item Одна из аксиом арифметики Пеано говорит, что ни для какого $x$ не верно, что $\zero = \suc(x)$.
+В произвольной декартово замкнутой категории это может быть верно, но только если она является категорией предпорядка.
+Докажите, что следующие утверждения эквивалентны.
+\begin{enumerate}
+\item $\C$ -- категория предпорядка.\\
+
+\item В $\C$ терминальный объект является объектом натуральных чисел.
+\item В $\C$ существует объект натуральных чисел, такой что для любого $x : 1 \to \mathbb{N}$ верно, что $\zero = \suc \circ x$.
+\item В $\C$ существует объект натуральных чисел, такой что для некоторого $x : 1 \to \mathbb{N}$ верно, что $\zero = \suc \circ x$.
+\end{enumerate}
+
+\item Докажите, что если в декартово замкнутой категории существует все малые копроизведения, то в ней существует объект натуральных чисел.
+
+\item Определите в произвольной декартово замкнутой категории с объектом натуральных чисел морфизм сложения $+ : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$, удовлетворяющий следующим условиям:
+\[ \xymatrix{ \mathbb{N} \ar[d]_{\langle \zero \circ !_\mathbb{N}, id_\mathbb{N} \rangle} \ar[rd]^{id_\mathbb{N}} \\
+              \mathbb{N} \times \mathbb{N} \ar[r]_-{+} & \mathbb{N}
+            }
+\qquad
+   \xymatrix{ \mathbb{N} \times \mathbb{N} \ar[r]^-{+} \ar[d]_{\suc \times id_\mathbb{N}} & \mathbb{N} \ar[d]^{\suc} \\
+              \mathbb{N} \times \mathbb{N} \ar[r]_-{+} & \mathbb{N}
+            } \]
+Докажите, что сложение коммутативно и ассоциативно, то есть, что коммутируют следующие диаграммы:
+\[ \xymatrix{ \mathbb{N} \times \mathbb{N} \ar[r]^{\langle \pi_2, \pi_1 \rangle} \ar[rd]_{+} & \mathbb{N} \times \mathbb{N} \ar[d]^{+} \\
+                                                                           & \mathbb{N} \times \mathbb{N}
+            } \]
+\[ \xymatrix{ (\mathbb{N} \times \mathbb{N}) \times \mathbb{N} \ar[r]^{\simeq} \ar[d]_{+ \times id_\mathbb{N}} & \mathbb{N} \times (\mathbb{N} \times \mathbb{N}) \ar[r]^-{id_\mathbb{N} \times +} & \mathbb{N} \times \mathbb{N} \ar[d]^{+} \\
+              \mathbb{N} \times \mathbb{N} \ar[rr]_{+} & & \mathbb{N}
+            } \]
+
+\end{enumerate}
+
+\end{document}
