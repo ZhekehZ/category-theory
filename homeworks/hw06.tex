@@ -1,0 +1,156 @@
+\documentclass[draft]{article}
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{cmap}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[all]{xy}
+
+\newcommand{\cat}[1]{\mathbf{#1}}
+\renewcommand{\C}{\cat{C}}
+\newcommand{\D}{\cat{D}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\FinSet}{\cat{FinSet}}
+\newcommand{\Grp}{\cat{Grp}}
+\newcommand{\CMon}{\cat{CMon}}
+\newcommand{\Ab}{\cat{Ab}}
+\newcommand{\Mat}{\cat{Mat}}
+\newcommand{\Num}{\cat{Num}}
+\newcommand{\fs}[1]{\mathrm{#1}}
+\newcommand{\Ob}{\fs{Ob}}
+\newcommand{\Hom}{\fs{Hom}}
+
+\newenvironment{tolerant}[1]{\par\tolerance=#1\relax}{\par}
+
+\begin{document}
+
+\title{Задания}
+\maketitle
+
+\begin{enumerate}
+
+\item Пусть $\C$ -- категория предпорядка, а $\D$ -- нет.
+\begin{enumerate}
+\item Могут ли $\C$ и $\D$ быть изоморфны?
+\item Могут ли $\C$ и $\D$ быть эквивалентны?
+\end{enumerate}
+
+\item Пусть $\C$ -- категория с одним объектом, а $\D$ -- нет.
+\begin{enumerate}
+\item Могут ли $\C$ и $\D$ быть изоморфны?
+\item Могут ли $\C$ и $\D$ быть эквивалентны?
+\end{enumerate}
+
+\item Пусть $\C$ -- дискретная категория, а $\D$ -- нет.
+\begin{enumerate}
+\item Могут ли $\C$ и $\D$ быть изоморфны?
+\item Могут ли $\C$ и $\D$ быть эквивалентны?
+\end{enumerate}
+
+\item Пусть $\C$ -- группоид, а $\D$ -- нет.
+\begin{enumerate}
+\item Могут ли $\C$ и $\D$ быть изоморфны?
+\item Могут ли $\C$ и $\D$ быть эквивалентны?
+\end{enumerate}
+
+\item Докажите, что $\Num$ эквивалентна $\FinSet$. Изоморфны ли эти категории?
+
+Рассмотрим функтор
+$ F : \Num \to \FinSet$\\
+$F(n) = \{1, 2, ... n\} =: A_n$\\
+$F((a_1, ..., a_n)) = \lambda x. ~case ~ x ~ of \{ i \Rightarrow a_i \} ~: A_n \to A_k$\\
+
+Так как $|Hom_{\Num}(n, k)| = k^n = |Hom_\FinSet(\{1,...,n\}, \{1,...,k\})|$ и  $F: Hom_{\Num}(n, k) \to Hom_\FinSet(\{1,...,n\}, \{1,...,k\})$ --- инъекция, то $F$ --- сюръекция. Значит $F$ строгий и полный.\\
+
+$\forall ~S \in \Set ~\exists A_{|S|} \simeq S$, так как равномощные множества изоморфны. Значит $\forall F(|S|)\simeq S$. F существенно сюръективен.\\
+Получается, что F --- экви.\\
+
+$\FinSet$ не изоморфен $\Num$, так как первый состоит из континуального множества объектов, а второй --- из счетного.
+
+\item Докажите, что $\Mat$ эквивалентна $\Mat^{op}$. Изоморфны ли эти категории?
+
+\item Докажите, что $\FinSet$ не эквивалентна $\Set$.
+
+Пусть $F: \Set \to \FinSet$ --- экви. \\
+Тогда $|Hom_\Set(\mathbb{N}, \{0\})| = |Hom_\FinSet(F(\mathbb{N}), F(\{0\}))| < \infty$, что неверно. 
+
+\item Пусть $F, G : \C \to \D$ -- пара функторов.
+Естественное преобразование $\alpha : F \to G$ называется \emph{естественным изоморфизмом}, если для любого объекта $X$ в $\C$ морфизм $\alpha_X : F(X) \to G(X)$ является изоморфизмом.
+
+Докажите, что $\alpha : F \to G$ -- естественный изоморфизм тогда и только тогда, когда $\alpha$ -- изоморфизм в категории $\D^\C$.
+
+\[
+\xymatrix{
+	F(X) \ar@<+0.5ex>[r]^{\alpha_X} \ar[d]_{F(f)} & G(X) \ar@<+0.5ex>[l]^{\beta_X}\ar[d]^{G(f)}\\
+	F(X) \ar@<+0.5ex>[r]^{\alpha_Y} & G(Y) \ar@<+0.5ex>[l]^{\beta_Y}
+}
+\]
+
+Если $\forall X: ~\alpha_X$ -- изо, то позьмем $\beta_X := \alpha_X^{-1}$. Для такого $\beta$ диаграмма выше коммутирует, значит $\beta$ -- естественное проеобразование. Кроме того, $(\alpha \circ \beta)_X = \alpha_X \circ \beta_X = id_{G(X)}$, а $(\beta\circ \alpha )_X = \beta_X \circ \alpha_X = id_{F(X)}$. Значит $\beta = \alpha^{-1}$ в $\D^\C$.\\
+
+Если $\beta = \alpha^{-1}$ в $\D^\C$, то $(\alpha \circ \beta)_X = \alpha_X \circ \beta_X = id_{G(X)}$ (и симметрично с другой стороны). Значит $\forall X:~ \beta_X = \alpha_X^{-1}$, то есть $\forall X: ~\alpha_X$ -- изо.
+
+
+\item Пусть $\C$ -- декартова категория. Докажите, что функтор $- \times 1$ изоморфен тождественному функтору в $\C^\C$.
+
+\[
+\xymatrix{
+	X \times 1 \ar@<+0.5ex>[r]^{\pi_1} \ar[d]_{\langle f, !\rangle} & X \ar@<+0.5ex>[l]^{\langle id, !\rangle}\ar[d]^{\langle f, !\rangle}\\
+	Y \times 1 \ar@<+0.5ex>[r]^{\pi_1} & X \ar@<+0.5ex>[l]^{\langle id, !\rangle}
+}
+\]
+
+Поскольку диаграмма выше коммутирует, то $\pi_1 : - \times 1 \to id$ и $\langle id, !\rangle$ --- естественные преобразования, причем взаимно обратные. То есть $\pi_1$ --- изоморфизм этих функторов.
+
+\item Пусть $\pmb{\rightrightarrows}$ -- категория, состоящая из двух объектов $\{ v, e \}$ и четырех морфизмов $\{ id_v : v \to v, id_e : e \to e, d : v \to e, c : v \to e \}$.
+Докажите, что категории $\cat{Graph}$ (эта категория определяется в предыдущем ДЗ) и $\Set^{\pmb{\rightrightarrows}^{op}}$ эквивалентны.
+Изоморфны ли эти категории?
+
+Рассмотрим функтор $F: \cat{Graph} \to \Set^{\pmb{\rightrightarrows}^{op}}$.\\
+$F((V, E)) = g$, где g --- функтор $\pmb{\rightrightarrows}^{op} \to \Set$ определененный следующим образом:\\
+$g(v) := V$\\
+$g(e) := E(V\times V)$\\
+$g(c^{op}) := \pi_1 \circ E^{-1}$\\
+$g(d^{op}) := \pi_2 \circ E^{-1}$\\
+
+$F((f_V, f_E)) = \alpha$, где $\alpha_v = f_V, \alpha_e = f_E$
+
+\[
+\xymatrix{
+E(V^2) \ar[r]^{f_E} \ar[d] & f_E(E)(f_V(V)^2) \ar[d]\\
+V \ar[r]_{f_V} &  f_V(V)
+}
+\]
+
+Так как $g(c^{op}), g(d^{op})$ -- функции, сопоставляющие ребрам их начала и концы, а $f_E$ сохраняет их (переводит ребро $x \to y$ в ребро $f_V(x) \to f_V(y)$), то данная диаграмма коммутирует (при любых значениях на ребрах, идущих вниз, подходящих под определение ЕП), а значит $\alpha$ --- естественное преобразование.
+
+Кроме того, можно заметить, что $F((f_V, f_E) \circ (h_V, h_E)) = \beta$, где $\beta_v = f_V \circ h_V, \beta_e = f_E \circ h_E$, при этом, если обозначить $\alpha^f_x=f_X, \alpha^h_x=h_X$, где $(x, X) \in \{(v, V), (e, E)\}$, то $\beta = \alpha^f \circ \alpha^h = F((f_V, f_E)) \circ F((h_V, h_E))$ а значит $F$ --- корректный функтор.\\
+
+
+Рассмотрим теперь функтор $G: \Set^{\pmb{\rightrightarrows}^{op}} \to \cat{Graph} $\\
+$G(f) = (f(v), E')$, где $E'(x, y) := (f(c^{op}))^{-1}(x) \cap (f(d^{op}))^{-1}(y)$\\
+$G(\alpha) = (\alpha_v, \alpha_e)$\\
+Из диаграммы выше следует также, что $G(\alpha\circ \beta) = ((\alpha\circ \beta)_v, (\alpha\circ \beta)_e) = (\alpha_v\circ \alpha_e)\circ (\beta_v, \beta_e)  = G(\alpha)\circ G(\beta)$, то есть $G$ корректный.\\
+
+$F \circ G$ и $G \circ F$ тождественны, так как $F$ переводит функцию для ребер в функцию, которая по ребру возвращает его начало или конец, а $G$ --- наоборот.
+
+Категории изоморфны, а значит и тождественны.
+
+\item Пусть $\D$ -- рефлективная подкатегория $\C$.
+\begin{enumerate}
+\item Докажите, что рефлектор $\Ob(\C) \to \Ob(\D)$ является фнуктором $R : \C \to \D$.
+\item Докажите, что $\eta$ является естественным преобразованием между $\fs{Id}_\C$ и $i \circ R$, где $i : \D \to \C$ -- функтор вложения.
+\end{enumerate}
+
+\item Пусть $F : \CMon \to \Ab$ -- рефлектор вложения $i : \Ab \to \CMon$.
+\begin{enumerate}
+\item \tolerant{500}{ Приведите пример конечного нетривиального коммутативного моноида $X$, такого что $|F(X)| = |X|$. }
+\item Приведите пример конечного коммутативного моноида $X$, такого что $|F(X)| < |X|$.
+\item Приведите пример коммутативного моноида $X$, такого что $\eta_X : X \to i(F(X))$ -- не сюръективна.
+\item Докажите, что для любого конечного коммутативного моноида $X$ функция $\eta_X : X \to i(F(X))$ является сюръективной. В частности $|F(X)| \leq |X|$.
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}
