@@ -155,7 +155,7 @@ $g(c^{op}) := \pi_1$\\
 $g(d^{op}) := \pi_2$\\
 $g(id) := id$\\
 
-Рассмотрим пару естественных преобразований $\alpha, \beta$, где $\alpha_v  = \beta_v = id,~\alpha_e = \langle f(c^{op}),~f(d^{op}), id \rangle, ~\beta_e = \pi_3$. Так как $\alpha_v \circ \beta_v = id,~~\beta_v \circ \alpha_v,~~\alpha_e \circ \beta_e = id,~~\beta_e \circ \alpha_e$, данные преобразования являются изоморфизмами. То есть $F(~(V, E)~) \simeq f$. Значит $F$ существенно сюръективен.\\
+Рассмотрим пару естественных преобразований $\alpha, \beta$, где $\alpha_v  = \beta_v = id,~\alpha_e = \langle f(c^{op}),~f(d^{op}), id \rangle, ~\beta_e = \pi_3$. Так как $\alpha_v \circ \beta_v = id,~~\beta_v \circ \alpha_v = id,~~\alpha_e \circ \beta_e = id,~~\beta_e \circ \alpha_e = id$, данные преобразования являются изоморфизмами. То есть $F(~(V, E)~) \simeq f$. Значит $F$ существенно сюръективен.\\
 
 Таким образом, $F$ --- экви.
 
@@ -163,14 +163,43 @@ $g(id) := id$\\
 
 \item Пусть $\D$ -- рефлективная подкатегория $\C$.
 \begin{enumerate}
-\item Докажите, что рефлектор $\Ob(\C) \to \Ob(\D)$ является фнуктором $R : \C \to \D$.
+\item Докажите, что рефлектор $\Ob(\C) \to \Ob(\D)$ является фнуктором $R : \C \to \D$.\\
+
+$R(id) = id:$
+\[
+\xymatrix{
+X \ar[r]^{id} \ar[d]_{\eta_X} & X \ar[d]_{\eta_X} \\
+\eta_X(X) \ar@{-->}[r]^{\exists! h = id} & \eta_X(X)
+}
+\]
+$R(f\circ g) = R(f) \circ R(g):$
+\[
+\xymatrix{
+X \ar[r]^g \ar[d]_{\eta_X} & Y\ar[r]^f \ar[d]_{\eta_Y} & Z \ar[d]_{\eta_Z}\\
+\eta_X(X) \ar@{-->}[r]^{\exists!g'} 
+\ar@<1ex>@{-->}`d/10pt`[rr]_{\exists!h}
+& \eta_Y(Y) \ar@{-->}[r]^{\exists!f'} & \eta_Z(Z)
+}
+\]
+
 \item Докажите, что $\eta$ является естественным преобразованием между $\fs{Id}_\C$ и $i \circ R$, где $i : \D \to \C$ -- функтор вложения.
+
+Следующая диаграмма коммутирует:
+\[
+\xymatrix{
+X \ar[r]^{\eta_X} \ar[d]_{f} & \eta_X(X) \ar@{-->}[d]^{\exists!h = (i \circ R) (f)} \\
+Y \ar[r]^{\eta_Y} &  \eta_Y(Y)
+}
+\]
 \end{enumerate}
 
 \item Пусть $F : \CMon \to \Ab$ -- рефлектор вложения $i : \Ab \to \CMon$.
 \begin{enumerate}
 \item \tolerant{500}{ Приведите пример конечного нетривиального коммутативного моноида $X$, такого что $|F(X)| = |X|$. }
+
+Можно взять любую нетривиальную абелеву группу (ее вложение в $\CMon$).
 \item Приведите пример конечного коммутативного моноида $X$, такого что $|F(X)| < |X|$.
+
 \item Приведите пример коммутативного моноида $X$, такого что $\eta_X : X \to i(F(X))$ -- не сюръективна.
 \item Докажите, что для любого конечного коммутативного моноида $X$ функция $\eta_X : X \to i(F(X))$ является сюръективной. В частности $|F(X)| \leq |X|$.
 \end{enumerate}
