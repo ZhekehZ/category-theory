@@ -7,6 +7,15 @@
 \usepackage{amsmath}
 \usepackage[all]{xy}
 
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+\urlstyle{same}
+
 \newcommand{\cat}[1]{\mathbf{#1}}
 \renewcommand{\C}{\cat{C}}
 \newcommand{\D}{\cat{D}}
@@ -20,6 +29,7 @@
 \newcommand{\fs}[1]{\mathrm{#1}}
 \newcommand{\Ob}{\fs{Ob}}
 \newcommand{\Hom}{\fs{Hom}}
+
 
 \newenvironment{tolerant}[1]{\par\tolerance=#1\relax}{\par}
 
@@ -216,7 +226,17 @@ $F(X) = (\mathbb{Z}, +)$\\
 $i(F(X)) = (\mathbb{Z}, +)$\\
 $\eta_X(x) = x$ -- не сюръекция
 
-\item Докажите, что для любого конечного коммутативного моноида $X$ функция $\eta_X : X \to i(F(X))$ является сюръективной. В частности $|F(X)| \leq |X|$.
+\item Докажите, что для любого конечного коммутативного моноида $X$ функция $\eta_X : X \to i(F(X))$ является сюръективной. В частности $|F(X)| \leq |X|$.\\
+
+Пусть дан некоторый коммутативный моноид $M$. Возьмем группу Гротендика $G(M)$, соответствующую этому моноиду.\\
+(нашел вот тут \url{https://en.wikipedia.org/wiki/Grothendieck_group}, решил не переписывать определение).
+
+Докажем, что $M \to i(G(M))$ --- сюръекция.\\
+Пусть $(a, b) \in G(M)$. \\
+Если $\exists b^{-1}$, то $(a, b) \sim (a*b^{-1}, 0) = G(a*b^{-1})$.\\
+Если это не так, то, поскольку моноид конечный, $\exists n,m \in \mathbb{N}, n > m: ~b^n=b^m$. Тогда $(a, b) \sim (a*b^{m+1}, b^{m+1}) = (a*b^{n+1}, b^{m+1}) = (a*b^{m+1}*b^{n - m}, b^{m+1}) \sim (a*b^{n - m}, 0) = G(a*b^{n - m})$.\\
+
+Таким образом, $i \circ G$ --- сюръекция, а значит $\eta_X$ --- сюръекция, так как $F$ изоморфен $G$.
 \end{enumerate}
 
 \end{enumerate}
