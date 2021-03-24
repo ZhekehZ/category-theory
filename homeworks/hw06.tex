@@ -175,30 +175,38 @@ $g(id) := id$\\
 \begin{enumerate}
 \item Докажите, что рефлектор $\Ob(\C) \to \Ob(\D)$ является фнуктором $R : \C \to \D$.\\
 
+Определим действие $R$ на морфизмах. Пусть $f: X \to Y$. Тогда $R(f) = f'$ из диаграммы ниже.
+\[
+\xymatrix{
+X \ar[r]^f \ar[d]^{\eta_X} & Y \ar[d]^{\eta_Y}\\
+R(X) \ar@{-->}[r]^{\exists! f'} & R(Y)
+}
+\]
+
 $R(id) = id:$
 \[
 \xymatrix{
 X \ar[r]^{id} \ar[d]_{\eta_X} & X \ar[d]_{\eta_X} \\
-\eta_X(X) \ar@{-->}[r]^{\exists! h = id} & \eta_X(X)
+R(X) \ar@{-->}[r]^{\exists! h = id} & R(X)
 }
 \]
 $R(f\circ g) = R(f) \circ R(g):$
 \[
 \xymatrix{
 X \ar[r]^g \ar[d]_{\eta_X} & Y\ar[r]^f \ar[d]_{\eta_Y} & Z \ar[d]_{\eta_Z}\\
-\eta_X(X) \ar@{-->}[r]^{\exists!g'} 
+R(X) \ar@{-->}[r]^{\exists!g'} 
 \ar@<1ex>@{-->}`d/10pt`[rr]_{\exists!h}
-& \eta_Y(Y) \ar@{-->}[r]^{\exists!f'} & \eta_Z(Z)
+& R(Y) \ar@{-->}[r]^{\exists!f'} & R(Z)
 }
 \]
 
 \item Докажите, что $\eta$ является естественным преобразованием между $\fs{Id}_\C$ и $i \circ R$, где $i : \D \to \C$ -- функтор вложения.
 
-Следующая диаграмма коммутирует:
+Следующая диаграмма коммутирует и является определением для Е.П между $\fs{Id}_\C$ и $i \circ R$:
 \[
 \xymatrix{
-X \ar[r]^{\eta_X} \ar[d]_{f} & \eta_X(X) \ar@{-->}[d]^{\exists!h = (i \circ R) (f)} \\
-Y \ar[r]^{\eta_Y} &  \eta_Y(Y)
+X \ar[r]^{i \circ \eta_X} \ar[d]_{f} & i(R(X)) \ar@{-->}[d]^{\exists!h =(i \circ R)(f)} \\
+Y \ar[r]^{i \circ \eta_Y} &  i(R(Y))
 }
 \]
 \end{enumerate}
