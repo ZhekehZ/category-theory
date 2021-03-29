@@ -1,0 +1,357 @@
+\documentclass{beamer}
+
+\usepackage[english,russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[all]{xy}
+\usepackage{ifthen}
+\usepackage{xargs}
+
+\usetheme{Szeged}
+% \usetheme{Montpellier}
+% \usetheme{Malmoe}
+% \usetheme{Berkeley}
+% \usetheme{Hannover}
+\usecolortheme{beaver}
+
+\newcommand{\newref}[4][]{
+\ifthenelse{\equal{#1}{}}{\newtheorem{h#2}[hthm]{#4}}{\newtheorem{h#2}{#4}[#1]}
+\expandafter\newcommand\csname r#2\endcsname[1]{#4~\ref{#2:##1}}
+\newenvironmentx{#2}[2][1=,2=]{
+\ifthenelse{\equal{##2}{}}{\begin{h#2}}{\begin{h#2}[##2]}
+\ifthenelse{\equal{##1}{}}{}{\label{#2:##1}}
+}{\end{h#2}}
+}
+
+\newref[section]{thm}{theorem}{Theorem}
+\newref{lem}{lemma}{Lemma}
+\newref{prop}{proposition}{Proposition}
+\newref{cor}{corollary}{Corollary}
+
+\theoremstyle{definition}
+\newref{defn}{definition}{Definition}
+
+\newcommand{\cat}[1]{\mathbf{#1}}
+\renewcommand{\C}{\cat{C}}
+\newcommand{\D}{\cat{D}}
+\newcommand{\E}{\cat{E}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\Grp}{\cat{Grp}}
+\newcommand{\Mon}{\cat{Mon}}
+\newcommand{\CMon}{\cat{CMon}}
+\newcommand{\Ab}{\cat{Ab}}
+\newcommand{\Ring}{\cat{Ring}}
+\renewcommand{\Vec}{\cat{Vec}}
+\newcommand{\Mat}{\cat{Mat}}
+\newcommand{\Num}{\cat{Num}}
+
+\newcommand{\pb}[1][dr]{\save*!/#1-1.2pc/#1:(-1,1)@^{|-}\restore}
+\newcommand{\po}[1][dr]{\save*!/#1+1.2pc/#1:(1,-1)@^{|-}\restore}
+
+\AtBeginSection[]
+{
+\begin{frame}[c,plain,noframenumbering]
+\frametitle{План лекции}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\makeatletter
+\defbeamertemplate*{footline}{my theme}{
+    \leavevmode
+}
+\makeatother
+
+\begin{document}
+
+\title{Теория категорий}
+\subtitle{Сопряженные функторы}
+\author{Валерий Исаев}
+\maketitle
+
+\section{Определение сопряженности}
+
+\begin{frame}
+\frametitle{Моноиды и слова}
+\begin{itemize}
+\item Пусть $U : \Mon \to \Set$ -- забывающий функтор на категории моноидов.
+\item Пусть $F : \Set \to \Mon$ -- функтор, сопоставляющий множеству $A$ множество слов в алфавите $A$.
+\[ F(A) = \{\ [a_1 \ldots a_n]\ |\ a_i \in A \ \} \]
+\item Тогда любая функция $f : A \to U(B)$ уникальным образом доопределяется до морфизма моноидов $g : F(A) \to B$.
+\item У этого соотвествия существует обратное, каждому морфизму моноидов $g : F(A) \to B$ сопоставляющее функцию $f : A \to U(B)$, $f(a) = g([a])$.
+\item Таким образом, существует биекция $\varphi : Hom_\Set(A, U(B)) \simeq Hom_\Mon(F(A), B)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Векторные пространства и базисы}
+\begin{itemize}
+\item Пусть $\Vec_K$ -- категория векторных пространств над полем $K$.
+\item Пусть $U : \Vec_K \to \Set$ -- забывающий функтор.
+\item Пусть $F : \Set \to \Vec_K$ -- функтор, сопоставляющий множеству $A$ векторное пространство с базисом $A$.
+\[ F(A) = \{\ c_1 a_1 + \ldots + c_n a_n\ |\ c_i \in K, a_i \in A \ \} \]
+\item Тогда любая функция $f : A \to U(B)$ уникальным образом доопределяется до линейного преобразования $g : F(A) \to B$.
+\item У этого соотвествия существует обратное, каждому линейному преобразованию $g : F(A) \to B$ сопоставляющее функцию $f : A \to U(B)$, $f(a) = g(1 a)$.
+\item Таким образом, существует биекция $\varphi : Hom_\Set(A, U(B)) \simeq Hom_\Vec(F(A), B)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Кольца и полиномы}
+\begin{itemize}
+\item Пусть $U : \Ring \to \Set$ -- забывающий функтор на категории колец.
+\item Пусть $F : \Set \to \Ring$ -- функтор, сопоставляющий множеству $X$ кольцо полиномов с переменными в $X$.
+\item Тогда любая функция $f : A \to U(B)$ уникальным образом доопределяется до морфизма колец $g : F(A) \to B$.
+\item У этого соотвествия существует обратное, каждому линейному преобразованию $g : F(A) \to B$ сопоставляющее функцию $f : A \to U(B)$, $f(a) = g(1 a^1)$.
+\item Таким образом, существует биекция $\varphi : Hom_\Set(A, U(B)) \simeq Hom_\Ring(F(A), B)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Сопряжение}
+\begin{defn}
+\emph{Сопряжение} между категориями $\C$ и $\D$ -- это тройка $(F, U, \varphi)$, состоящая из функторов $F : \C \to \D$ и $U : \D \to \C$ и естественного изоморфизма $\varphi_{A,B} : Hom_\D(F(A), B) \simeq Hom_\C(A, U(B))$.
+\end{defn}
+
+\vspace{\baselineskip}
+
+В определении $\varphi$ является естественным изоморфизмом между функторами $Hom_\D(F(-), -), Hom_\C(-, U(-)) : \C^{op} \times \D \to \Set$.
+
+\vspace{\baselineskip}
+
+Во всех примерах, приведенных ранее, изоморфизм $\varphi_{A,B}$ был естественен по $A$ и $B$.
+Таким образом, это были примеры сопряжений.
+\end{frame}
+
+\begin{frame}
+\frametitle{Уникальность сопряженных функторов}
+\begin{itemize}
+\item Если $(F, U, \varphi)$ -- сопряжение, то пишут $F \dashv U$ и говорят, что $F$ -- \emph{левый сопряженный} к $U$, а $U$ -- \emph{правый сопряженный} к $F$.
+\item Если $F \dashv U$ и $F' \dashv U$, то $F$ и $F'$ изоморфны.
+\item Доказательство: упражнение.
+\item Если $F \dashv U$ и $F \dashv U'$, то $U$ и $U'$ изоморфны.
+\item Доказательство: по дуальности.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Сохранение (ко)пределов}
+\begin{prop}
+Левые сопряженные функторы сохраняют копределы.
+Правые сопряженные функторы сохраняют пределы.
+\end{prop}
+\begin{proof}
+Второе утверждение является дуальным к первому.
+Докажем первое.
+Пусть $F : \C \to \D$ -- левый сопряженный к $G : \D \to \C$.
+Пусть $D : J \to \C$ -- некоторая диаграмма в $\C$.
+Пусть $L = colim\ D$ -- копредел этой диаграммы.
+
+Пусть $\alpha : F \circ D \to X$ -- некоторый коконус в $\D$.
+Тогда существует уникальная стрелка из $L$ в $G(X)$.
+По сопряженности она соответствует уникальной стрелки из $F(L)$ в $X$.
+Таким образом, $F(L)$ -- копредел $F \circ D$.
+\end{proof}
+\end{frame}
+
+\section{Единица и коединица сопряжения}
+
+\begin{frame}
+\frametitle{Определение}
+\begin{itemize}
+\item Пусть $(F, G)$ -- сопряжение.
+\item Тогда $\varphi_{A,F(A)} : Hom_\D(F(A), F(A)) \simeq Hom_\C(A, GF(A))$.
+\item Пусть $\eta_A : A \to GF(A)$ -- естественное преобразование, которое определяется как $\eta_A = \varphi_{A,F(A)}(id_{F(A)})$.
+\item С другой стороны $\varphi_{G(B),B} : Hom_\D(FG(B), B) \simeq Hom_\C(G(B), G(B))$.
+\item Пусть $\epsilon_B : FG(B) \to B$ -- естественное преобразование, которое определяется как $\epsilon_B = \varphi^{-1}_{G(B),B}(id_{G(B)})$.
+\item $\eta_A$ называется \emph{единицей} сопряжения, а $\epsilon_B$ -- \emph{коединицей}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Примеры}
+\begin{itemize}
+\item $\eta_A(a)$ возвращает ``одноэлементное слово на букве $a$''.
+\begin{itemize}
+\item Для категории моноидов $\eta_A(a) = [a]$.
+\item Для категории векторных пространств $\eta_A(a) = 1 a$.
+\item Для категории колец $\eta_A(a) = a$ -- полином, состоящий из одной переменной $a$.
+\end{itemize}
+
+\item $\epsilon_B : FU(B) \to B$ ``вычисляет'' формальное выражение в $B$.
+\begin{itemize}
+\item Для категории моноидов $\epsilon_B([a_1 \ldots a_n]) = a_1 \cdot \ldots \cdot a_n$.
+\item Для категории векторных пространств $\epsilon_B(c_1 a_1 + \ldots + c_n a_n) = c_1 \cdot a_1 + \ldots + c_n \cdot a_n$.
+\item Для категории колец $\epsilon_B$ определяется аналогичным образом как функция, вычисляющая полином на данных значениях.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Свойства единицы и коединицы}
+\begin{prop}
+Если $(F,G,\varphi)$ -- сопряжение, то следующие диаграммы коммутируют:
+\[ \xymatrix{ G(B) \ar[r]^{\eta_{GB}} \ar[rd]_{id_{GB}} & GFG(B) \ar[d]^{G\epsilon_B} \\
+                                                        & G(B)
+            }
+\qquad
+   \xymatrix{ F(A) \ar[r]^{F\eta_A} \ar[rd]_{id_{FA}} & FGF(A) \ar[d]^{\epsilon_{FA}} \\
+                                                      & F(A)
+            } \]
+\end{prop}
+\end{frame}
+
+\begin{frame}
+\frametitle{Доказательство}
+\begin{proof}
+Условия естественности $\varphi$ и $\varphi^{-1}$ можно переписать в следующем виде:
+\[ \xymatrix{ A \ar[rr]^{\varphi(f \circ F(h))} \ar[d]_h           & & G(C) \ar[d]^{G(g)} \\
+              B \ar[rr]_{\varphi(g \circ f)} \ar[urr]_{\varphi(f)} & & G(D)
+            }
+\qquad
+   \xymatrix{ F(A) \ar[rr]^{\varphi^{-1}(f' \circ h)} \ar[d]_{F(h)}                  & & C \ar[d]^g \\
+              F(B) \ar[rr]_{\varphi^{-1}(G(g) \circ f')} \ar[urr]_{\varphi^{-1}(f')} & & D
+            } \]
+Нижний треугольник в первой диаграмме дает первое необходимое равенство при $f = id_{FG(B)}$ и $g = \epsilon_B$.
+Второе необходимое равенство получается из верхнего треугольника во второй диаграмме при $f' = id_{GF(A)}$ и $h = \eta_A$.
+\end{proof}
+\end{frame}
+
+\begin{frame}
+\frametitle{Определение сопряжения через единицу и коединицу}
+Существует эквивалентное определение понятия сопряжения через единицу и коединицу.
+\begin{prop}
+Четверка $(F : \C \to \D, G : \D \to \C, \eta_A : A \to GF(A), \epsilon : FG(B) \to B)$, состоящая из пары функторов и пары естественных преобразований,
+удовлетворяющих условию, приведенному в предыдущем утверждении, определяет сопряжение $(F,G,\varphi)$, где $\varphi(f) = G(f) \circ \eta_A$ для любого $f : F(A) \to B$,
+$\varphi^{-1}(g) = \epsilon_B \circ F(g)$ для любого $g : A \to G(B)$.
+Единицей и коединицей этого сопряжения являются $\eta$ и $\epsilon$ соответственно.
+\end{prop}
+\end{frame}
+
+\begin{frame}
+\frametitle{Доказательство}
+\begin{proof}
+\only<1>{
+Последнее утверждение элементарно следует из определения $\varphi$ и $\varphi^{-1}$.
+Докажем, что $\varphi$ и $\varphi^{-1}$ взаимообратны:
+\begin{align*}
+\varphi^{-1}(\varphi(f)) & = \text{ (по определению $\varphi$ и $\varphi^{-1}$) } \\
+\epsilon_B \circ FG(f) \circ F(\eta_A) & = \text{ (по естественности $\epsilon$) } \\
+f \circ \epsilon_{F(A)} \circ F(\eta_A) & = \text{ (по свойству $\epsilon$ и $\eta$) } \\
+f & . \\
+\varphi(\varphi^{-1}(g)) & = \text{ (по определению $\varphi$ и $\varphi^{-1}$) } \\
+G(\epsilon_B) \circ GF(g) \circ \eta_A & = \text{ (по естественности $\eta$) } \\
+G(\epsilon_B) \circ \eta_{G(B)} \circ g & = \text{ (по свойству $\epsilon$ и $\eta$) } \\
+g & .
+\end{align*}
+}
+\only<2>{
+Осталось доказать, что $\varphi$ естественно.
+Для этого достаточно проверить равенства, приводившиеся в доказательстве предыдущего утверждения.
+\begin{align*}
+G(g) \circ \varphi(f) & = \text{ (по определению $\varphi$) } \\
+G(g) \circ G(f) \circ \eta_B & = \text{ (так как $G$ -- функтор) } \\
+G(g \circ f) \circ \eta_B & = \text{ (по определению $\varphi$) } \\
+\varphi(g \circ f) & . \\
+\varphi(f) \circ h & = \text{ (по определению $\varphi$) } \\
+G(f) \circ \eta_B \circ h & = \text{ (по естественности $\eta$) } \\
+G(f) \circ GF(h) \circ \eta_A & = \text{ (по определению $\varphi$) } \\
+\varphi(f \circ F(h)) & .
+\end{align*}
+}
+\alt<2>{\qedhere}{\phantom\qedhere}
+\end{proof}
+\end{frame}
+
+\section{Примеры}
+
+\begin{frame}
+\frametitle{Эквивалентность категорий}
+\begin{itemize}
+\item Если $F : \C \to \D$ -- эквивалентность категорий, то $F$ одновеременно и левый и правый сопряженный.
+\item Любой обратный к $F$ будет его правым и левым сопряженным.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Рефлективные подкатегории}
+\begin{itemize}
+\item Если $i : \C \to \D$ -- функтор вложения полной подкатегории, то $i$ является правым сопряженным тогда и только тогда, когда $\C$ -- рефлективная подкатегория.
+\item Левый сопряженный к $i$ называется рефлектором.
+\item Если $F \dashv i$, то $\eta_X : X \to i(F(X))$ дает нам необходимую аппроксимацию к $X$ в $\C$.
+\item Если $\C$ -- рефлективная подкатегория, то $F : \D \to \C$ на объектах определяется очевидным образом, а на морфизмах по универсальному свойству.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Определение}
+\begin{itemize}
+\item Декартова категория является декартово замкнутой тогда и только тогда, когда для любого объекта $B$ функтор $- \times B$ является левым сопряженным.
+\item Действительно, правый сопряженный к нему -- это функтор $(-)^B$, а коединица сопряжения $\epsilon_C : C^B \times B \to C$ -- это морфизм вычисления $ev$.
+\item Биекция, которая появляется в определении сопряженных функторов, -- это в точности биекция каррирования.
+\end{itemize}
+\end{frame}
+
+\section{Over categories}
+
+\begin{frame}
+\frametitle{Семейства множеств}
+\begin{itemize}
+\item Мы можем определить категорию множеств, параметризованных некоторым множеством $I$.
+\item Ее объекты -- это семейства множеств, т.е. просто функции $I \to \Set$.
+\item Морфизмы двух семейств $\{ X_i \}_{i \in I}$ и $\{ Y_i \}_{i \in I}$ -- это семейства морфизмов $\{ f_i : X_i \to Y_i \}_{i \in I}$.
+\item Тождественный морфизм и композиция задаются поточечно.
+\item Очевидно, мы получим категорию, которую мы будем обозначать $\cat{Fam}_I$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Множества над $I$}
+\begin{itemize}
+\item Эта конструкция не обобщается на произвольную категорию очевидным образом.
+\item Но мы можем определить категорию $\cat{Fam}_I$ эквивалентным образом как $\Set/I$.
+\item Объекты категории $\Set/I$ -- это множества над $I$, т.е. пара $(A,f)$, где $A$ -- множество, а $f : A \to I$ -- функция.
+\item Морфизмы между $f : A \to I$ и $g : B \to I$ -- это функции $h : A \to B$ такие, что следующий треугольник коммутирует:
+\[ \xymatrix{ A \ar[rd]_f \ar[rr]^h &   & B \ar[ld]^g \\
+                                    & I
+            } \]
+\item Тождественный морфизм и композиция определены как соответствующие операции в $\Set$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Объекты над $I$}
+\begin{itemize}
+\item Теперь мы можем обобщить эту конструкцию на произвольную категорию.
+\item Если $I$ -- объект некоторой категории $\C$, то \emph{категория объектов над $I$} (aka slice category) обозначается $\C/I$ и определяется следующим образом.
+\item Объекты $\C/I$ -- это пары $(A,f)$, где $A$ -- объект $\C$, а $f : A \to I$ -- морфизм в $\C$.
+\item Морфизмы между $f : A \to I$ и $g : B \to I$ -- это морфизмы $h : A \to B$ такие, что следующий треугольник коммутирует:
+\[ \xymatrix{ A \ar[rd]_f \ar[rr]^h &   & B \ar[ld]^g \\
+                                    & I
+            } \]
+\item Тождественный морфизм и композиция определены как соответствующие операции в $\C$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Переиндексирование}
+\begin{itemize}
+\item Если у нас есть семейство множеств $\{ A_i \}_{i \in I}$ и функция $f : J \to I$, то мы можем построить новое семейство $\{ A_{f(j)} \}_{j \in J}$
+\item Если переформулировать это в терминах множеств над $I$, то мы получим операцию, строящую множество над $J$ по множеству над $I$ и функции $f : J \to I$:
+\[ \xymatrix{            & A \ar[d] \\
+              J \ar[r]_f & I
+            } \]
+\item Что это за операция? Можно ли ее обобщить на произвольную категорию?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Пулбэк-функтор}
+\begin{itemize}
+\item Конечно, переиндексация соответствует просто пулбэку $f^*(A)$.
+\item Если в категории $\C$ существуют пулбэки, то для любого морфизма $f : J \to I$ мы можем определить функтор $f^* : \C/I \to \C/J$, обобщий эту конструкцию.
+\item Этот функтор по объекту над $I$ возвращает его пулбэк вдоль $f$, а на морфизмах действует по универсальному свойству пулбэков.
+\item У функтора $f^* : \C/I \to \C/J$ всегда есть левый сопряженный $\Sigma_f : \C/J \to \C/I$, который определяется как $\Sigma_f(A) = f \circ A$.
+\end{itemize}
+\end{frame}
+
+\end{document}
