@@ -1,0 +1,122 @@
+\documentclass[draft]{article}
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{cmap}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[all]{xy}
+
+\newcommand{\cat}[1]{\mathbf{#1}}
+\renewcommand{\C}{\cat{C}}
+\newcommand{\D}{\cat{D}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\FinSet}{\cat{FinSet}}
+\newcommand{\Grp}{\cat{Grp}}
+\newcommand{\Mon}{\cat{Mon}}
+\newcommand{\CMon}{\cat{CMon}}
+\newcommand{\Ab}{\cat{Ab}}
+\newcommand{\Mat}{\cat{Mat}}
+\newcommand{\Num}{\cat{Num}}
+\newcommand{\fs}[1]{\mathrm{#1}}
+\newcommand{\id}{\fs{id}}
+
+\newenvironment{tolerant}[1]{\par\tolerance=#1\relax}{\par}
+
+\begin{document}
+
+\title{Задания}
+\maketitle
+
+\begin{enumerate}
+
+\item На второй лекции мы видели, что морфизм групп является мономорфизмом тогда и только тогда, когда мономорфизмом является соответствующая ему функция на множествах.
+Сейчас мы можем обобщить это утверждение.
+Забывающий функтор $U : \Grp \to \Set$ является правым сопряженным и строгим.
+Для любого функтора, удовлетворяющего этим двум условиям, можно доказать аналогичное утверждение.
+
+Пусть $U : \C \to \D$ -- некоторый функтор.
+Докажите следующие утверждения:
+\begin{enumerate}
+\item Если $U$ является правым сопряженным, то он сохраняет мономорфизмы.
+
+Пусть $f : X \to Y$ -- моно. Пусть в следующей диаграмме $U(f) \circ g = U(f) \circ h$. 
+\[
+\xymatrix{
+A \ar@<+0.5ex>[r]^{g} \ar@<-0.5ex>[r]_{h} & U(X) \ar[r]^{U(f)} & U(Y)
+}
+\]
+$\phi^{-1}(U(f) \circ g) = \phi^{-1}(U(f) \circ h)$\\
+$f \circ \phi^{-1}(g) = f \circ \phi^{-1}(h) \Rightarrow \phi^{-1}(g) = \phi^{-1}(h) \Rightarrow f = g$
+
+\item Если $U$ является строгим, то обратное верно, то есть если $U(f)$ -- мономорфизм, то $f$ также является мономорфизмом.
+
+\[
+\xymatrix{
+A \ar@<+0.5ex>[r]^{g} \ar@<-0.5ex>[r]_{h} & X \ar[r]^{f} & Y
+}
+\]
+
+$f \circ g = f \circ h, ~U $ строгий  $ \Rightarrow U(f \circ g) = U(f \circ h) \Rightarrow U(f) \circ U(g) = U(f) \circ U(h) \Rightarrow U(g) = U(h) \Rightarrow \phi^{-1}(U(g)) = \phi^{-1}(U(h)) \Rightarrow g = h$
+
+\end{enumerate}
+
+\item Докажите, что у забывающего функтора $U : \cat{Cat} \to \cat{Graph}$, сконструированного в 5 ДЗ, существует левый сопряженный.
+
+Построим левый обратный $F$.\\
+Пусть $F(~(V, E)~) = C$, где \\
+$Ob(C) = V$\\
+$Hom(v_a, v_b) = \{[v_a, E(v_a, v_1), v_1, E(v_1, v_2), v_2, ..., v_b] ~|~ v_i \in V\}$ --- произвольные конечные пути
+(если $v_a = v_b$, то $[v_a] \in Hom(v_a, v_b)$ -- нейтральный элемент) \\
+$F_V(v) = v$\\
+$F_E(e^{a\to b}) = [a, e^{a\to b}, b]$\\
+Композиция морфизмов --- композиция путей.
+
+Покажем, что $Hom(A, U(B)) \simeq Hom(F(A), B)$. \\
+Пусть $f \in Hom(A, U(B))$, тогда ему можно однозначно сопоставить $g \in Hom(F(A), B)$:\\
+$g(V) = f(V)$\\
+$g([v_a, E(v_a, v_1), v_1, E(v_1, v_2), v_2, ..., v_b]) = f(E(v_a, v_1)) \circ f(E(v_1, v_2)) ...$\\
+$g([v_a]) = [f(v_a)]$
+
+\item Докажите, что левый сопряженный к некоторому функтору $U$ уникален с точностью до изоморфизма, то есть если $F \dashv U$ и $F' \dashv U$, то $F \simeq F'$.
+
+Пусть $\alpha_A = \epsilon_{F'A} \circ F\eta'_A, ~~\beta_A = \epsilon'_{FA} \circ F'\eta_A$
+
+Рассмотрим диаграмму
+\[
+\xymatrix{
+F(A) \ar[r]^{\eta_A} \ar @{--<} `l/15pt[d] `[dd]_{\alpha_A} [dd] \ar[d]^{F_{\eta'_A}} & FGF(A) \ar[dr]^{id} \ar[d]^{F{\eta'_{GFA}}} & \\
+FGF'(A) \ar[r]_{FGF'\eta_A} \ar[d]^{\epsilon_{F'A}} & FGF'GF(A) \ar[r]_{FG\epsilon'_{FA}} \ar[d]^{\epsilon_{F'GFA}} & FGF(A) \ar[d]^{\epsilon_{FA}} \\
+F'(A) \ar @{--<} `d/15pt[r] `[rr]_{\beta_A} [rr]
+ \ar[r]_{F'\eta_A} & F'GF(A) \ar[r]_{\epsilon'_{FA}} & F(A)
+}
+\]
+Верхний квадрат коммутирует по натуральности $\eta'$, два нижних -- по натуральности $\epsilon$. Правый верхний треугольник -- так как $F' \dashv U$. Композиция стрелок $F(A)\to FGF(A) \to FGF(A) \to F(A)$ равна $id$, так как $F \dashv U$. Значит $\beta_A \circ \alpha_A = id$. Если построить симметричную диаграмму (меняем $F, F'$), то получится, что $\alpha_A \circ \beta_A = id$. \\
+То есть $\alpha$ --- изоморфизм функторов $F, F'$.
+
+\item Есть ли у забывающего функтора $U : \Grp \to \Set$ правый сопряженный? Докажите это.
+
+\item Есть ли у забывающего функтора $U : \Grp \to \Mon$ правый сопряженный? Докажите это.
+
+\item Пусть $\cat{rGraph}$ -- категорий рефлексивных графов.
+Объекты этой категории -- это графы, в которых для каждой вершины $x$ выбрана петля $id_x$ в этой вершине.
+Морфизмы -- морфизмы графов, сохраняющие тождественные петли.
+
+Категория графов в данном упражнении не будет работать, но вместо $\cat{rGraph}$ можно взять категорию малых группоидов или категорию малых категорий; решение при этом не изменится.
+
+Докажите, что у функтора $\Gamma : \cat{rGraph} \to \Set$, сопоставляющего каждому рефлексивному графу множество его вершин, существует правый сопряженный $C : \Set \to \cat{rGraph}$ и левый сопряженный $D : \Set \to \cat{rGraph}$,
+и у $D$ существует левый сопряженный $\Pi_0 : \cat{rGraph} \to \Set$.
+Таким образом, мы получаем следующую цепочку сопряженных функторов:
+\[ \Pi_0 \dashv D \dashv \Gamma \dashv C \]
+
+\item Докажите, что категории $\cat{Fam}_I$ и $\Set/I$ эквивалентны.
+
+\item Пусть $\C$ -- декартовая категория.
+Если $A$ -- объект $\C$, то мы можем определить функтор $A^* : \C \to \C/A$ как $A^*(B) = (A \times B, \pi_1)$ и $A^*(f) = \id_A \times f$.
+\begin{enumerate}
+\item Докажите, что у $A^*$ есть левый сопряженный.
+\item Докажите, что если $\C$ декартово замкнута и в $\C$ есть уравнители, то у $A^*$ есть правый сопряженный.
+\end{enumerate}
+\end{enumerate}
+
+\end{document}
