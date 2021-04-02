@@ -36,8 +36,8 @@ instance Eq a => Eq (SetAbGroup a) where
     SAG p1 n1 == SAG p2 n2 = null diffPos && null diffNeg
         where 
             diff x1 x2 = (x1 \\ x2) `union` (x2 \\ x1)
-            diffPos = diff p1 p2  
-            diffNeg = diff n1 n2  
+            diffPos = diff (p1 \\ n1) (p2 \\ n2)  
+            diffNeg = diff (n1 \\ p1) (n2 \\ p2)    
 
 
 -- Task 09
