@@ -1,0 +1,406 @@
+\documentclass{beamer}
+
+\usepackage[english,russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[all]{xy}
+\usepackage{ifthen}
+\usepackage{xargs}
+
+\usetheme{Szeged}
+% \usetheme{Montpellier}
+% \usetheme{Malmoe}
+% \usetheme{Berkeley}
+% \usetheme{Hannover}
+\usecolortheme{beaver}
+
+\newcommand{\newref}[4][]{
+\ifthenelse{\equal{#1}{}}{\newtheorem{h#2}[hthm]{#4}}{\newtheorem{h#2}{#4}[#1]}
+\expandafter\newcommand\csname r#2\endcsname[1]{#4~\ref{#2:##1}}
+\newenvironmentx{#2}[2][1=,2=]{
+\ifthenelse{\equal{##2}{}}{\begin{h#2}}{\begin{h#2}[##2]}
+\ifthenelse{\equal{##1}{}}{}{\label{#2:##1}}
+}{\end{h#2}}
+}
+
+\newref[section]{thm}{theorem}{Theorem}
+\newref{lem}{lemma}{Lemma}
+\newref{prop}{proposition}{Proposition}
+\newref{cor}{corollary}{Corollary}
+
+\theoremstyle{definition}
+\newref{defn}{definition}{Definition}
+
+\newcommand{\cat}[1]{\mathbf{#1}}
+\renewcommand{\C}{\cat{C}}
+\newcommand{\D}{\cat{D}}
+\newcommand{\E}{\cat{E}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\Grp}{\cat{Grp}}
+\newcommand{\Mon}{\cat{Mon}}
+\newcommand{\Ab}{\cat{Ab}}
+\newcommand{\Ring}{\cat{Ring}}
+\renewcommand{\Vec}{\cat{Vec}}
+\newcommand{\Mat}{\cat{Mat}}
+\newcommand{\Num}{\cat{Num}}
+\newcommand{\Mod}[1]{#1\text{-}\cat{Mod}}
+\newcommand{\fs}[1]{\mathrm{#1}}
+\newcommand{\id}{\fs{id}}
+
+\newcommand{\pb}[1][dr]{\save*!/#1-1.2pc/#1:(-1,1)@^{|-}\restore}
+\newcommand{\po}[1][dr]{\save*!/#1+1.2pc/#1:(1,-1)@^{|-}\restore}
+
+\AtBeginSection[]
+{
+\begin{frame}[c,plain,noframenumbering]
+\frametitle{План лекции}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\makeatletter
+\defbeamertemplate*{footline}{my theme}{
+    \leavevmode
+}
+\makeatother
+
+\begin{document}
+
+\title{Теория категорий}
+\subtitle{Монады}
+\author{Валерий Исаев}
+\maketitle
+
+\section{Монады}
+
+\begin{frame}
+\frametitle{Определение}
+\begin{defn}
+Монада на категории $\C$ -- это тройка $(T,\eta,\mu)$, состоящая из эндофунктора $T : \C \to \C$, и пары естественных преобразований $\eta_A : A \to T(A)$ и $\mu_A : TT(A) \to T(A)$.
+Эта тройка должна удовлетворять следующим условиям:
+\[ \xymatrix{ TTT(A) \ar[r]^{T(\mu_A)} \ar[d]_{\mu_{T(A)} } & TT(A) \ar[d]^{\mu_A} \\
+              TT(A) \ar[r]_{\mu_A}                          & T(A)
+            }
+\quad
+   \xymatrix{ T(A) \ar[r]^{\eta_{T(A)}} \ar[rd]_{\id_{T(A)}} & TT(A) \ar[d]^{\mu_A} & T(A) \ar[l]_{T(\eta_A)} \ar[dl]^{\id_{T(A)}} \\
+                                                            & T(A)
+            } \]
+\end{defn}
+\end{frame}
+
+\begin{frame}
+\frametitle{Монады из сопряжения}
+\begin{itemize}
+\item Если $(F : \C \to \D, G : \D \to \C, \eta_A : A \to GF(A), \epsilon_B : FG(B) \to B)$ -- сопряжение, то $(G \circ F, \eta, G(\epsilon_{F(A)}))$ -- монада.
+\item Коммутативность диаграммы
+\[ \xymatrix{ GFGFGF(A) \ar[rr]^{GFG(\epsilon_{F(A)})} \ar[d]_{G(\epsilon_{FGF(A)})} & & GFGF(A) \ar[d]^{G(\epsilon_{F(A)})} \\
+              GFGF(A) \ar[rr]_{G(\epsilon_{F(A)})}                                   & & GF(A)
+            } \]
+следует из того факта, что $\epsilon$ -- естественное преобразование.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Монады из сопряжения}
+Коммутативность диаграммы
+\[ \xymatrix{ GF(A) \ar[rr]^{\eta_{GF(A)}} \ar[rrd]_{\id_{GF(A)}} & & GFGF(A) \ar[d]^{G(\epsilon_{F(A)})} & & GF(A) \ar[ll]_{GF(\eta_A)} \ar[dll]^{\id_{GF(A)}} \\
+                                                                 & & GF(A)
+            } \]
+следует из свойст единицы и коединицы.
+\end{frame}
+
+\begin{frame}
+\frametitle{Примеры монад из сопряжения}
+\begin{itemize}
+\item В категории $\Lambda$ функтор $- \times B$ является левым сопряженным.
+В хаскелле монада, соответствующая этому сопряжению, называется State.
+\item Мы видели пример сопряжения между категорией моноидов и категорией множеств.
+Монада на категории $\Set$, соответствующая этому сопряжению, является аналогом монады списков в хаскелле.
+\item На хаскелле можно определить аналоги монад над категорией $\Set$, соответствующих другим алгебраическим структурам,
+если правильно определить $\mathit{instance}\ \mathit{Eq}$ для типа монад.
+\end{itemize}
+\end{frame}
+
+\section{Алгебры над монадами}
+
+\begin{frame}
+\frametitle{Мотивация}
+\begin{itemize}
+\item Пусть $T$ -- монада над категорией $\C$, которая получена из некоторого сопряжения.
+\item Можно ли восстановить это сопряжение по монаде?
+\item Не всегда, но если исходное сопряжения достаточно хорошее (говорят, что оно \emph{монадично}), то можно.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Определение алгебр}
+\begin{defn}
+Пусть $(T,\eta,\mu)$ -- монада над $\C$.
+Тогда $T$-алгебра -- это пара $(A,h)$, где $A$ -- объект $\C$ и $h : T(A) \to A$ -- морфизм, удовлетворяющий следующим условиям:
+\[ \xymatrix{ TT(A) \ar[r]^{T(h)} \ar[d]_{\mu_A} & T(A) \ar[d]^h \\
+              T(A) \ar[r]_h                      & A
+            }
+\qquad
+   \xymatrix{ A \ar[r]^-{\eta_A} \ar[rd]_{\id_A} & T(A) \ar[d]^h \\
+                                                & A
+            } \]
+\end{defn}
+\end{frame}
+
+\begin{frame}
+\frametitle{Определение категории алгебр}
+\begin{defn}
+Морфизм $T$-алгебр $(A,h)$ и $(A',h')$ -- это $\C$-морфизм $f : A \to A'$, удовлетворяющий следующему условию:
+\[ \xymatrix{ T(A) \ar[r]^-h \ar[d]_{T(f)} & A \ar[d]^f \\
+              T(A') \ar[r]_-{h'}           & A'
+            } \]
+Тождественный морфизм и композиция морфизмов определены так же, как в $\C$.
+Это задает категорию $T$-алгебр, которую мы будем обозначать $T\text{-}\cat{alg}$.
+\end{defn}
+\end{frame}
+
+\begin{frame}
+\frametitle{Примеры категорий алгебр}
+\begin{itemize}
+\item Пусть $T : \Set \to \Set$ -- монада, соотвествующая сопряжению $F \dashv U : \Mon \to \Set$.
+То есть $T(A)$ -- множество конечных последовательностей элементов из $A$.
+\item Тогда структура $T$-алгебры на множестве $A$ состоит из функции $h : T(A) \to A$, удовлетворяющей ряду аксиом.
+\item Если $A$ -- моноид, то мы можем определить $h$ как $h([a_1\ \ldots\ a_n]) = a_1 * \ldots * a_n$.
+\item И наоборот, если на $A$ есть структура $T$-алгебры, то на $A$ есть структура моноида: $1 = h([])$ и $a * b = h([a\,b])$.
+\item Можно показать, структура $T$-алгебры и структура моноида на множестве $A$ -- это одно и то же.
+\item Можно показать, что категории $T$-алгебр и моноидов изоморфны.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Примеры категорий алгебр}
+\begin{itemize}
+\item В общем случае это тоже верно.
+\item Пусть $T : \Set \to \Set$ -- монада, соответствующая некоторому ``алгебраическому'' сопряжению $F \dashv U : \D \to \Set$,
+где $\D$ -- категория каких-либо алгебраических структур.
+\item Тогда категории $T$-алгебр изоморфна категории $\D$.
+\item Это следует из теоремы Бека, которую мы доказывать не будем.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Примеры алгебр}
+\begin{itemize}
+\item Тип $\mathit{Tree}$ бинарных деревьев
+\[ \mathit{data}\ \mathit{Tree}\ a\ =\ \mathit{Leaf}\ a\ |\ \mathit{Node}\ (\mathit{Tree}\ a)\ (\mathit{Tree}\ a) \]
+является монадой.
+\item Алгебра над $\mathit{Tree}$ -- это тип $X$ с одной бинарной операцией $* : X \times X \to X$.
+\item Связь становится более очевидной, если переписать тип $\mathit{Tree}$ следующим образом:
+\[ \mathit{data}\ \mathit{Expr}\ a\ =\ \mathit{Var}\ a\ |\ \mathit{Expr}\ a\ :*\ \mathit{Expr}\ a \]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Монадичность алгебр}
+\begin{itemize}
+\item Пусть $T : \C \to \C$ -- монада. Из категории алгебр существует забывающий функтор $U^T : T\text{-}\cat{alg} \to \C$, $U^T(A,h) = A$.
+\item Существует функтор $F^T : \C \to T\text{-}\cat{alg}$, сопоставляющий каждому объекту $A$ свободную $T$-алгебру на $A$.
+\[ F^T(A) = (T(A), \mu_A) \]
+\item $F^T$ является левым сопряженным к $U^T$ и монада, соответствующая этому сопряжению, -- это просто $T$.
+\item Доказательство: упражнение.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Монадичность сопряжения}
+\begin{itemize}
+\item Пусть $F \dashv U : \D \to \C$ -- сопряжение, а $T = U \circ F$ -- соответствующая ему монада.
+\item Тогда существует уникальный функтор $K : \D \to T\text{-}\cat{alg}$, такой что $U^T \circ K = U$ и $K \circ F = F^T$.
+\item Это утверждение доказывается не очень сложно, но мы не будем этого делать.
+\item Если функтор $K$ является эквивалентностью категорий, то говорят, что сопряжение \emph{монадично} (еще говорят, что $U$ монадичен, и, что $\D$ монадично над $\C$).
+\item Если $K$ является изоморфизмом, то говорят, что сопряжение \emph{строго монадично}.
+\item Как уже отмечалось ранее, алгебраические категории строго монадичны над $\Set$.
+\end{itemize}
+\end{frame}
+
+\section{Категория Клейсли}
+
+\begin{frame}
+\frametitle{Определение}
+\begin{itemize}
+\item Пусть $(T, \eta, \mu)$ -- монада над $\C$. Тогда категория Клейсли $\cat{Kl}_T$ определяется следующим образом.
+\item Объекты $\cat{Kl}_T$ -- это объекты $\C$.
+\item Морфизмы $\cat{Kl_T}$ из $A$ в $B$ -- это морфизмы в $\C$ из $A$ в $T(B)$.
+\item Тождественный морфизм -- $\eta_A$, композиция морфизмов $f : A \to T(B)$ и $g : B \to T(C)$ -- $\mu_C \circ T(g) \circ f$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Свойства}
+\begin{itemize}
+\item Категория Клейсли эквивалентна полной подкатегории $T\text{-}\cat{alg}$ на свободных $T$-алгебрах.
+То есть алгебрах вида $(T(A), \mu_A)$.
+\item Доказательство: упражнение.
+\item Существует функтор $F_T : \C \to \cat{Kl}_T$, $F_T(A) = A$, $F_T(f : A \to B) = \eta_B \circ f$.
+\item Существует функтор $U_T : \cat{Kl}_T \to \C$, $U_T(A) = T(A)$, $U_T(f : A \to T(B)) = \mu_B \circ T(f)$.
+\item Функтор $F_T$ является левым сопряженным к $U_T$, монада $U_T \circ F_T$ -- это просто $T$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Свойства}
+\begin{itemize}
+\item Пусть $F \dashv U : \D \to \C$ -- некоторое сопряжение, и $T$ -- соответствующая ему монада.
+\item Тогда существует уникальный функтор $L : \cat{Kl}_T \to \D$, такой что $U \circ L = U_T$ и $L \circ F_T = F$.
+\item Таким образом, категория Клейсли является начальным объектом в некоторой категории сопряжений (мы ее не определяли), а категория алгебр является терминальным объектом в этой категории.
+\end{itemize}
+\end{frame}
+
+\section{Алгебраические теории}
+
+\begin{frame}
+\frametitle{Определение}
+Алгебраическая теория $T = (\mathcal{S},\mathcal{F},\mathcal{A})$ состоит из следующего набора данных:
+\begin{itemize}
+\item Множество сортов $\mathcal{S}$.
+\item Множество функциональных символов $\mathcal{F}$, где для каждого символа указана его сигнатура:
+\[ \sigma : s_1 \times \ldots \times s_k \to s \]
+\item Множество аксиом $\mathcal{A}$, где каждая аксиома -- это выражение вида $t_1 = t_2$, где $t_1,t_2$ -- термы, составленные из функциональных символов теории и переменных.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Примеры теорий}
+\begin{itemize}
+\item Теории (коммутативных) моноидов, (абелевых) групп и (коммутативных) колец (с единицей) являются примерами алгебраических теорий с одним сортом.
+\item Теория коммутативных колец и модулей над ними является примером алгебраической теории с двумя сортами.
+\item Теория полей не алгебраична.
+\item Теория графов состоит из двух сортов $V$ и $E$ и двух функциональных символов $d,c : E \to V$.
+\item Теория множеств состоит из одного сорта и не содержит никаких символов и аксиом.
+\item Тривиальная теория состоит из одного сорта и одной аксиомы $x = y$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Модели теории}
+\begin{itemize}
+\item Модель $M$ теории $T$ -- это коллекция множеств $\{ M_s \}_{s \in \mathcal{S}}$ вместе с функциями $M(\sigma) : M_{s_1} \times \ldots \times M_{s_k} \to M_s$
+для каждого функционального символа $\sigma : s_1 \times \ldots \times s_k \to s$, удовлетворяющая аксиомам.
+\item Морфизм $f$ моделей $M$ и $N$ -- это коллекция функций $\{ f_s \}_{s \in \mathcal{S}}$, такая что для всех $\sigma : s_1 \times \ldots \times s_k \to s$ и всех $a_1 \in M_{s_1}$, \ldots $a_k \in M_{s_k}$ верно,
+что $f_s(M(\sigma)(a_1, \ldots a_k)) = N(\sigma)(f_{s_1}(a_1), \ldots f_{s_k}(a_k))$.
+\item У нас есть тождественный морфизм и композиция морфизмов, удовлетворяющие необходимым свойствам.
+\item Следовательно, существует категория моделей теории $T$, которую мы будем обозначать $\Mod{T}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Примеры моделей}
+\begin{itemize}
+\item Категории моделей теорий (коммутативных) моноидов, (абелевых) групп и (коммутативных) колец (с единицей) являются категориями соответствующих алгебраических структур.
+\item Категория моделей теории графов эквивалентна категории графов.
+\item Категория моделей теории множеств -- это $\Set$.
+\item Категория моделей тривиальной теории тривиальна, то есть эквивалентна дискретной категории на одном объекте.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Модели теории в декартовой категории}
+\begin{itemize}
+\item Если $\C$ -- декартовая категория и $T = (\mathcal{S},\mathcal{F},\mathcal{A})$ -- алгебраическая теория, то мы можем определить категорию $\Mod{T}(\C)$ моделей $T$ в категории $\C$.
+\item Модель $M$ теории $T$ в категории $\C$ -- это коллекция объектов $\{ M_s \}_{s \in \mathcal{S}}$ вместе с функциями $M(\sigma) : M_{s_1} \times \ldots \times M_{s_k} \to M_s$
+для каждого функционального символа $\sigma : s_1 \times \ldots \times s_k \to s$, удовлетворяющая аксиомам.
+Морфизмы моделей определяются как раньше.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Моноиды в декартовой категории}
+Например, моноид в $\C$ -- это объект $M$ вместе с морфизмами $e : 1 \to M$ и $* : M \times M \to M$ такой, что следующие диаграммы коммутируют.
+\[ \xymatrix{ M \times M \times M \ar[r]^-{* \times \id_M} \ar[d]_{\id_M \times *} & M \times M \ar[d]^{*} \\
+              M \times M \ar[r]_{*}                                                & M
+            }
+\quad
+   \xymatrix{ M \ar[rr]^-{\langle \id_M, e \circ !_M \rangle} \ar[rrd]_{\id_M} & & M \times M \ar[d]^{*} & & M \ar[ll]_-{\langle e \circ !_M, \id_M \rangle} \ar[dll]^{\id_M} \\
+                                                                               & & M
+            } \]
+\end{frame}
+
+\subsection{Свойства категории моделей}
+
+\begin{frame}
+\frametitle{Функторы}
+\begin{itemize}
+\item Пусть $\Set^\mathcal{S}$ -- категория $\mathcal{S}$-индексированных множеств.
+\item Забывающий функтор $U : \Mod{T} \to \Set^\mathcal{S}$ является строгим и правым сопряженным.
+\item Левый сопряженный $F : \Set^\mathcal{S} \to \Mod{T}$ к нему для каждого $\mathcal{S}$-индексированного множества $X$ возвращает свободную модель на $X$.
+\item Другими словами, $F(X)$ определяется как множество термов теории $T$ с переменными в $X$ с точностью до эквивалентности, определяемой аксиомами.
+\item Единица сопряжения $\eta_X : X \to U F(X)$ каждому $x \in X$ сопоставляет терм из одной переменной $x$.
+\item Коединица сопряжения $\epsilon_M : F U(M) \to M$ каждому терму сопоставляет элемент модели $M$, который задается этим термом.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Пределы и копределы}
+\begin{itemize}
+\item Категория моделей любой алгебраической теории полна, $U$ сохраняет пределы.
+\item Все операции определены поточечно.
+\item Категория моделей любой алгебраической теории кополна.
+\item Коуравнитель $f,g : M \to N$ можно определить как $U F U(N)$ с точностью до отношения эквивалентности, которое пораждается отношениями $f(x) \sim g(x)$ для всех $x \in M$.
+\item Копроизведение $\coprod_{i \in I} M_i$ определяется как $U F (\coprod_{i \in I} U(M_i))$ с точностью до отношения эквивалентности,
+которое пораждается отношениями $\sigma(a_1, \ldots a_k) \sim M_i(\sigma)(a_1, \ldots a_k)$ для всех символов $\sigma$ и всех $a_1, \ldots a_k \in M_i$.
+\end{itemize}
+\end{frame}
+
+\subsection{Связь с монадами}
+
+\begin{frame}
+\frametitle{От теорий к монадам}
+\begin{itemize}
+\item Любая алгебраическая теория $T$ определяет монаду на $\Set^\mathcal{S}$ -- монаду, соответствующую сопряжению $F \dashv U$.
+\item Категория моделей $T$ эквивалентна категории алгебр над $U \circ F$.
+\item Действительно, алгебра над $U \circ F$ -- это просто $\mathcal{S}$-индексированное множество вместе с функцией интерпретирующей термы теории $T$.
+\item Любую модель теории можно достроить до интерпретации всех теормов теории.
+\item В частности у нас есть интерпретация всех функциональных символов $\sigma(x_1, \ldots x_k)$.
+\item В этой интерпретации выполняются аксиомы, так как термы рассматриваются с точностью до эквивалентности, пораждаемой аксиомами.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{От монад к теориям}
+\begin{itemize}
+\item Любой монаде $T : \Set^\mathcal{S} \to \Set^\mathcal{S}$ можно сопоставить алгебраическую теорию с множеством сортов $\mathcal{S}$.
+\item Множество функциональных символов с сигнатурой $s_1 \times \ldots \times s_k \to s$ мы определим как $T(\{ x_1 : s_1, \ldots x_k : s_k \})_s$.
+\item Аксиомы теории:
+\begin{align*}
+\eta_{\{x : s\}}(x) & = x \\
+\text{bind}(t, x_i \mapsto t_i) & = t(t_1, \ldots t_k)
+\end{align*}
+для всех $t \in T(\{ x_1 : s_1, \ldots x_k : s_k \})_s$ и $t_1 \in T(X)_{s_1}$, \ldots $t_k \in T(X)_{s_k}$,
+где $\text{bind}(t,f) = \mu_X(T(f)(t))$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Финитарные монады}
+\begin{itemize}
+\item В общем случае категория моделей теории, которую мы построили по монаде, не будет эквивалентна категории алгебр над этой монадой.
+\item Действительно, мы в определении применяли $T$ только к конечным множествам.
+\item Если монада финитарна, то это будет верно, то есть финитарные монады -- это примерно то же самое, что и алгебраические теории.
+\item Интуитивно монада финитарна, если ее значения на бесконечных множествах однозначно определяется ее значением на конечных.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Направленные копределы}
+\begin{itemize}
+\item Частично упорядоченное множество называется \emph{направленным}, если любое его конечное подмножество имеет верхнюю границу (не обязательно точную!).
+\item Диаграмма в некоторой категории называется \emph{направленной}, если она индексирована направленным множеством.
+\item Копредел называется \emph{направленным}, если он является копределом направленной диаграммы.
+\item Монада называется \emph{финитарной}, если она сохраняет направленные копределы.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Примеры направленных копределов}
+\begin{itemize}
+\item Любая полурешетка является направленным множеством.
+\item В частности множество конечных подмножеств любого множества является направленным.
+\item Любое множество является копределом своих конечных подмножеств, индексированных этим множеством.
+\end{itemize}
+\end{frame}
+
+\end{document}

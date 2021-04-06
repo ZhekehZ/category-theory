@@ -1,0 +1,91 @@
+\documentclass[draft]{article}
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{cmap}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[all]{xy}
+
+\newcommand{\cat}[1]{\mathbf{#1}}
+\renewcommand{\C}{\cat{C}}
+\newcommand{\D}{\cat{D}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\Grp}{\cat{Grp}}
+\newcommand{\Ab}{\cat{Ab}}
+\newcommand{\Mat}{\cat{Mat}}
+\newcommand{\Num}{\cat{Num}}
+\newcommand{\fs}[1]{\mathrm{#1}}
+\newcommand{\Mod}[1]{#1\text{-}\cat{Mod}}
+
+\newenvironment{tolerant}[1]{\par\tolerance=#1\relax}{\par}
+
+\begin{document}
+
+\title{Задания}
+\maketitle
+
+\begin{enumerate}
+
+\item Пусть $T : \C \to \C$ -- монада.
+Докажите, что функтор
+\begin{align*}
+& U^T : T\text{-}\cat{alg} \to \C \\
+& U^T(A,h) = A
+\end{align*}
+является правым сопряженным к
+\begin{align*}
+& F^T : \C \to T\text{-}\cat{alg} \\
+& F^T(A) = (T(A), \mu_A),
+\end{align*}
+и монада, соответствующая этому сопряжению, -- это просто $T$.
+
+\item Докажите, что категория Клейсли $\cat{Kl}_T$ эквивалентна полной подкатегории $T\text{-}\cat{alg}$ на свободных $T$-алгебрах.
+
+
+
+\item Опишите алгебраическую теорию, категория моделей которой эквивалентна категории рефлексивных графов, которые определялись в предыдущем ДЗ.
+
+$T = (\mathcal{S},\mathcal{F}, \mathcal{A})$\\
+$\mathcal{S} = \{v, e, B\}$\\
+$\mathcal{F} = \{edge~:~v\to v \to e \to B,~~id~:~v \to e, ~~Tru, Fls ~:~ B\}$\\
+$\mathcal{A} = \{edge~x~x ~(id~x ) = Tru\}$
+
+\item Докажите, что для любой малой категории $\C$ категория функторов $\Set^{\C^\fs{op}}$ эквивалентна категории моделей некоторой алгебраической \tolerant{500}{ теории. }
+
+\item Докажите, что категория $\Mod{\fs{Mon}}(\Mod{\fs{Mon}})$ моноидов в категории моноидов (в $\Set$) изоморфна категории коммутативных моноидов (в $\Set$).
+
+\item Реализуйте на хаскелле монаду, аналогичную монаде абелевых групп на множествах.
+Обратите внимание, что вам потребуется определить особым образом $\mathit{instance}\ \mathit{Eq}$ для типа монад.
+
+\item Пусть $(A,*,1)$ -- моноид.
+Тогда \emph{полумодуль} над моноидом $A$ -- это моноид $(M,+,0)$ вместе с операцией $\cdot : A \times M \to M$, удовлетворяющий следующим условиям:
+\begin{itemize}
+\item $r \cdot (x + y) = r \cdot x + r \cdot y$
+\item $(r * s) \cdot x = r \cdot (s \cdot x)$
+\item $1 \cdot x = x$
+\end{itemize}
+Забывающий функтор $\cat{Mod}_A \to \Set$ является правым сопряженным.
+Следовательно существует монада полумодулей на категории $\Set$.
+Реализуйте на хаскелле монаду, аналогичную этой монаде.
+
+\item Пусть $(A,+,0,*,1)$ -- кольцо.
+Тогда \emph{полумодуль} над кольцом $A$ -- это моноид $(M,+,0)$ вместе с операцией $\cdot : A \times M \to M$, удовлетворяющий следующим условиям:
+\begin{itemize}
+\item $r \cdot (x + y) = r \cdot x + r \cdot y$
+\item $(r + s) \cdot x = r \cdot x + s \cdot x$
+\item $0 \cdot x = 0$
+\item $(r * s) \cdot x = r \cdot (s \cdot x)$
+\item $1 \cdot x = x$
+\end{itemize}
+Забывающий функтор $\cat{Mod}_A \to \Set$ является правым сопряженным.
+Следовательно существует монада полумодулей на категории $\Set$.
+Реализуйте на хаскелле монаду, аналогичную этой монаде.
+
+\item Реализуйте $\mathit{instance}\ \mathit{Monad}$ для типа $\mathit{Term}$:
+\[ \mathit{data}\ \mathit{Term}\ a\ =\ \mathit{Var}\ a\ |\ \mathit{App}\ (\mathit{Term}\ a)\ (\mathit{Term}\ a)\ |\ \mathit{Lam}\ (\mathit{Term}\ (\mathit{Maybe}\ a)) \]
+Реализуйте алгоритм нормализации для $\mathit{Term}$.
+
+\end{enumerate}
+
+\end{document}
