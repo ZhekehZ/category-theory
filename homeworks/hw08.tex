@@ -6,6 +6,7 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage[all]{xy}
+\usepackage{mathtools}
 
 \newcommand{\cat}[1]{\mathbf{#1}}
 \renewcommand{\C}{\cat{C}}
@@ -52,6 +53,42 @@ $\mathcal{F} = \{src~:~e\to v,~~dst ~:~ e \to v, ~~ id ~:~ v \to e\}$\\
 $\mathcal{A} = \{ src ~(id~x) = x,~~ dst ~(id~x) = x\}$
 
 \item Докажите, что для любой малой категории $\C$ категория функторов $\Set^{\C^\fs{op}}$ эквивалентна категории моделей некоторой алгебраической \tolerant{500}{ теории. }
+
+$
+T = (\mathcal{S},\mathcal{F}, \mathcal{A})\\
+\mathcal{S} = \{Ob_C, Hom_C, Ob_S, Hom_S, F\}\\
+\mathcal{F}:\\ 
+\begin{matrix*}[l]
+src_C ~:~ Hom_C \to Ob_C &
+dst_C ~:~ Hom_C \to Ob_C\\
+id_C ~:~ Ob_C \to Hom_C&
+\circ_C ~:~ Hom_C \to Hom_C \to Hom_C\\\\
+ src_S ~:~ Hom_S \to Ob_S &
+dst_S ~:~ Hom_S \to Ob_S\\ 
+id_S ~:~ Ob_S \to Hom_S&
+\circ_S ~:~ Hom_S \to Hom_S \to Hom_S\\\\  
+F_{Ob}~:~ F \to Ob_C \to Ob_S&
+F_{Hom}~:~ F \to Hom_C \to Hom_S\\
+\end{matrix*}
+$\\
+
+(далее $src, dst, \circ$ используются как полиморфные функции)\\
+$
+\mathcal{A}:\\
+\begin{matrix*}[l]
+src~(id~x) = x & -~~ id: a \to a\\
+dst~(id~x) = x\\
+src~(x \circ y) = src ~x & -~~\circ: (a \to b) \to (b \to c) \to\\
+dst~(x \circ y) = dst ~y& ~~~~~~~~~~~~~~~~\to a \to c\\\\
+z\circ (x \circ y) = (z\circ x) \circ y &-~~\circ assoc\\
+z\circ id ~(dst ~z) = z & -~~id ~is~ id\\
+id~(src ~z) \circ z  = z\\\\
+src~(F_{Hom}~f~h) = F_{ob}~f~(src~h)&-~~F:~(a\to b)\to F(a)\to\\
+dst~(F_{Hom}~f~h) = F_{ob}~f~(dst~h)&~~~~~~~~~~~~~~~~~~~~~~~~ \to F(b)\\
+F_{Hom}~f~(h\circ g) = F_{Hom}~f~h\circ F_{Hom}~f~g&-~~F(a\circ b) = F~a\circ F~b\\
+\end{matrix*}
+$
+
 
 \item Докажите, что категория $\Mod{\fs{Mon}}(\Mod{\fs{Mon}})$ моноидов в категории моноидов (в $\Set$) изоморфна категории коммутативных моноидов (в $\Set$).
 
