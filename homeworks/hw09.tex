@@ -1,0 +1,88 @@
+\documentclass[draft]{article}
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{cmap}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[all]{xy}
+
+\newcommand{\cat}[1]{\mathbf{#1}}
+\renewcommand{\C}{\cat{C}}
+\newcommand{\D}{\cat{D}}
+\newcommand{\y}{\cat{y}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\Grp}{\cat{Grp}}
+\newcommand{\Ab}{\cat{Ab}}
+\newcommand{\Mat}{\cat{Mat}}
+\newcommand{\fs}[1]{\mathrm{#1}}
+\newcommand{\op}{\fs{op}}
+\newcommand{\Num}{\cat{Num}}
+
+\newcommand{\Conus}{\mathrm{Conus}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\limit}{\mathrm{lim}}
+\newcommand{\colim}{\mathrm{colim}}
+
+% \tolerance=500
+% \setlength{\emergencystretch}{3em}
+
+\newenvironment{tolerant}[1]{\par\tolerance=#1\relax}{\par}
+
+\begin{document}
+
+\title{Задания}
+\maketitle
+
+\begin{enumerate}
+
+\item Докажите, что вложение Йонеды сохраняет пределы.
+
+\item Докажите, что вложение Йонеды сохраняет экспоненты. То есть, если $a$, $b$ -- объекты $\C$ такие, что $b^a$ существует,
+то $\y(b)^{\y(a)}$ тоже существует и определяется как $\y(b^a)$.
+
+\item Докажите, что коллекция объектов вида $\y a$ является генератором для категории предпучков.
+
+\item Определите категорию $\C$, такую что $\Set^{\C^\op}$ эквивалентна категори рефлексивных графов.
+
+\[
+\xymatrix{
+	V 
+	\ar@(ld,lu)^{id}
+	\ar@/^1.5pc/[rr]^{src}
+	\ar@/_1.5pc/[rr]_{dst}
+	&& 
+	E 
+	\ar@(rd,ru)_{id}	
+	\ar@(ul,ur)^{l}	
+	\ar@(dl,dr)_{r}	
+	\ar[ll]^{i}
+}
+\]
+
+$G_E$ -- ребра, $G_V$ -- вершины.\\
+$dst, src: ~G_E \to G_V$ \\
+$i: ~G_V \to G_E$\\
+$dst \circ i = id$\\
+$src \circ i = id$\\
+$i \circ dst = r$\\
+$i \circ src = l$\\
+$src \circ l = src$\\
+$dst \circ l = src$\\
+$dst \circ r = dst$\\
+$src \circ r = dst$\\
+$l \circ i = i$\\
+$r \circ i = i$
+
+
+\item Докажите, что функтор $F : \Set^{\C^\op} \to \D$ является левым сопряженным тогда и только тогда, когда он сохраняет копределы.
+
+\item Докажите, что функтор $\Set^{\C^\op}$ является свободным копополнением $\C$, то есть, что для любой кополной категории $\D$ и любого функтора $F : \C \to \D$
+существует уникальный (с точностью до изоморфизма) функтор $\widetilde{F} : \Set^{\C^\op} \to \D$, сохраняющий копределы, и такой, что следующая диаграмма коммутирует (с точностью до изоморфизма функторов):
+\[ \xymatrix{ \C \ar[r]^F \ar[d]_{\cat{y}}                 & \D \\
+              \Set^{\C^\op} \ar@{-->}[ur]_{\widetilde{F}}
+            } \]
+
+\end{enumerate}
+
+\end{document}

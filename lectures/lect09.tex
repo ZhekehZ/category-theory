@@ -1,0 +1,363 @@
+\documentclass{beamer}
+
+\usepackage[english,russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[all]{xy}
+\usepackage{ifthen}
+\usepackage{xargs}
+
+\usetheme{Szeged}
+% \usetheme{Montpellier}
+% \usetheme{Malmoe}
+% \usetheme{Berkeley}
+% \usetheme{Hannover}
+\usecolortheme{beaver}
+
+\newcommand{\newref}[4][]{
+\ifthenelse{\equal{#1}{}}{\newtheorem{h#2}[hthm]{#4}}{\newtheorem{h#2}{#4}[#1]}
+\expandafter\newcommand\csname r#2\endcsname[1]{#4~\ref{#2:##1}}
+\newenvironmentx{#2}[2][1=,2=]{
+\ifthenelse{\equal{##2}{}}{\begin{h#2}}{\begin{h#2}[##2]}
+\ifthenelse{\equal{##1}{}}{}{\label{#2:##1}}
+}{\end{h#2}}
+}
+
+\newref[section]{thm}{theorem}{Theorem}
+\newref{lem}{lemma}{Lemma}
+\newref{prop}{proposition}{Proposition}
+\newref{cor}{corollary}{Corollary}
+
+\theoremstyle{definition}
+\newref{defn}{definition}{Definition}
+
+\newcommand{\cat}[1]{\mathbf{#1}}
+\renewcommand{\C}{\cat{C}}
+\newcommand{\y}{\cat{y}}
+\newcommand{\D}{\cat{D}}
+\newcommand{\E}{\cat{E}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\Grp}{\cat{Grp}}
+\newcommand{\Mon}{\cat{Mon}}
+\newcommand{\Ab}{\cat{Ab}}
+\newcommand{\Ring}{\cat{Ring}}
+\renewcommand{\Vec}{\cat{Vec}}
+\newcommand{\Mat}{\cat{Mat}}
+\newcommand{\Num}{\cat{Num}}
+
+\newcommand{\Conus}{\mathrm{Conus}}
+\newcommand{\Hom}{\mathrm{Hom}}
+\newcommand{\limit}{\mathrm{lim}}
+\newcommand{\colim}{\mathrm{colim}}
+
+\newcommand{\pb}[1][dr]{\save*!/#1-1.2pc/#1:(-1,1)@^{|-}\restore}
+\newcommand{\po}[1][dr]{\save*!/#1+1.2pc/#1:(1,-1)@^{|-}\restore}
+
+\AtBeginSection[]
+{
+\begin{frame}[c,plain,noframenumbering]
+\frametitle{План лекции}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\makeatletter
+\defbeamertemplate*{footline}{my theme}{
+    \leavevmode
+}
+\makeatother
+
+\begin{document}
+
+\title{Теория категорий}
+\subtitle{Категории предпучков}
+\author{Валерий Исаев}
+\maketitle
+
+\section{$\Hom$-функторы}
+
+\begin{frame}
+\frametitle{Определение}
+\begin{itemize}
+\item Пусть $A$ -- объект некоторой категории $\C$. Тогда существуют функторы
+\[ \Hom_\C(A, -) : \C \to \Set \]
+\[ \Hom_\C(-, A) : \C^{op} \to \Set \]
+\item На объектах они действуют следующим образом: $\Hom_\C(A, -)(B) = \Hom_\C(A, B)$ и $\Hom_\C(-, A)(B) = \Hom_\C(B, A)$.
+\item На морфизмах они действуют следующим образом: $\Hom_\C(A, -)(f) = g \mapsto f \circ g$ и $\Hom_\C(-, A)(f) = g \mapsto g \circ f$.
+\item Эти функторы называются (ковариантным и контравариантным) \emph{$\Hom$-функторами}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Определение (ко)пределов через $\Hom$-функторы}
+\begin{itemize}
+\item Существует определение (ко)пределов через $\Hom$-функторы и (ко)пределы в $\Set$.
+\item Если $D : J \to \C$ -- диаграмма и $L$ -- объект $\C$, то пусть $\Conus_D(L) = \limit_{j \in J} \Hom_\C(L, D(j))$ -- множество конусов диаграммы $D$ с вершиной $L$.
+\item Если $C$ -- конус диаграммы $D$, то существует естественное преобразование $\alpha_X : \Hom_\C(X,L) \to \Conus_D(X)$, определяемое как $\alpha_X(f)_j = C_j \circ f$.
+\item Конус $C$ является пределом тогда и только тогда, когда $\alpha$ -- естественный изоморфизм.
+\item Отсюда следует, что $\Hom(X,-)$ сохраняет пределы.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Пример}
+\begin{itemize}
+\item Например, пусть $J$ -- дискретная категория на $\{ 1, 2 \}$, $D(j) = A_j$.
+\item Тогда $L$ вместе с функиями $\pi_j : L \to A_j$ является произведением $A_1$ и $A_2$ тогда и только тогда, когда функции $\Hom(X,L) \to \Hom(X,A_1) \times \Hom(X,A_2)$,
+порождаемые композицией с проекциями являются биекциями для любого $X$.
+\item Аналогичные утверждения верны и для $\Hom(-, X) : \C^{op} \to \Set$. Например, он сохраняет пределы.
+\item Действительно, $\Hom_\C(A \amalg B, X) \to \Hom_\C(A,X) \times \Hom_\C(B,X)$ является биекцией.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Приложение}
+\begin{itemize}
+\item Докажем, что правый сопряженный функтор $G : \D \to \C$ сохраняет пределы.
+\item Пусть $F$ -- левый сопряженный к $G$, $D : J \to \D$ -- диаграмма в $\D$ и $L$ -- ее предел. Тогда
+\begin{align*}
+\Hom(X,G(L)) & \simeq \\
+\Hom(F(X),L) & \simeq \\
+\limit_{j \in J} \Hom(F(X), D(j)) & \simeq \\
+\limit_{j \in J} \Hom(X, GD(j)) & .
+\end{align*}
+\end{itemize}
+\end{frame}
+
+\section{Лемма Йонеды}
+
+\begin{frame}
+\frametitle{Лемма Йонеды}
+\only<1>{
+\begin{lem}
+Пусть $a$ -- объект категории $\C$ и $F : \C^{op} \to \Set$ -- некоторый функтор.
+Тогда существует биекция $\Hom_{\Set^{\C^{op}}}(\Hom_\C(-,a), F) \simeq F(a)$ естественная по $a$.
+\end{lem}
+}
+\begin{proof}
+\only<1>{
+Если $\alpha : \Hom_\C(-,a) \to F$, то определим $T(\alpha) = \alpha_a(id_a) \in F(a)$.
+Если $x \in F(a)$, то определим $S(x) : \Hom_\C(-,a) \to F$ как $S(x)_b(f) = F(f)(x)$.
+Естественность $S(x)$ следует из того факта, что $F$ сохраняет композиции.
+}
+\only<2>{
+Нужно проверить, что $T$ и $S$ взаимообратны.
+Пусть $x \in F(a)$, тогда $T(S(x)) = S(x)_a(id_a) = F(id_a)(x) = x$.
+
+Пусть $\alpha : \Hom_\C(-,a) \to F$.
+Тогда $S(T(\alpha))_b(f) = F(f)(T(\alpha)) = F(f)(\alpha_a(id_a)) = \alpha_b(f)$.
+Последнее равенство следует из естественности $\alpha$.
+
+\medskip
+
+Осталось проверить естественность по $a$.
+Ее достаточно проверить для $S$.
+Если $g : a \to c$ и $x \in F(c)$, то нужно проверить, что $S_c(F(g)(x))_b(f) = S_a(x)_b(g \circ f)$.
+Это следует непосредственно из определения $S$.
+}
+\alt<2>{\qedhere}{\phantom\qedhere}
+\end{proof}
+\end{frame}
+
+\begin{frame}
+\frametitle{Вложение Йонеды}
+\begin{itemize}
+\item Для любой категории $\C$ функтор $\Hom_\C(-,-) : \C \to \Set^{\C^{op}}$ является полным и строгим.
+\item Действительно, в лемме Йонеды достаточно взять в качестве $F$ функтор $\Hom_\C(-,b)$.
+\item Этот функтор называется \emph{вложением Йонеды} и обозначается $\y : \C \to \Set^{\C^{op}}$.
+\item Для того, чтобы проверить, что объекты $a$ и $b$ категории $\C$ изоморфны, достаточно проверить, что $\y a \simeq \y b$.
+\item Если $f : a \to b$, то $f$ является изоморфизмом тогда и только тогда, когда для любого $c$ композиция с $f$ задает биекцию на множествах $\Hom_\C(c,a)$ и $\Hom_\C(c,b)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Пример}
+\begin{itemize}
+\item В качестве примера использования этого факта покажем, что в декартово замкнутой категории верно $a^{b \amalg c} \simeq a^b \times a^c$.
+\item Действительно,
+\begin{align*}
+\Hom(x,a^{b \amalg c}) & \simeq \\
+\Hom(b \amalg c,a^x) & \simeq \\
+\Hom(b,a^x) \times \Hom(c,a^x) & \simeq \\
+\Hom(x,a^b) \times \Hom(x,a^c) & \simeq \\
+\Hom(x,a^b \times a^c) & .
+\end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Ко- лемма Йонеды}
+\begin{itemize}
+\item Интуитивно, ко- лемма Йонеды говорит, что произвольный функтор $P : \C^{op} \to \Set$ является копределом функторов вида $\y a$.
+\item Объекты категории $J_P$ -- это пары $(a,x)$, где $a$ -- объект $\C$, $x \in P(a)$.
+\item Морфизмы между $(a,x)$ и $(b,y)$ -- это морфизмы $f : a \to b$ категории $\C$, такие, что $P(f)(y) = x$.
+\item Диаграмма $D_P : J_P \to \Set^{\C^{op}}$ каждому $(a,x)$ сопоставляет $\y a$.
+\item \emph{Ко- лемма Йонеды} утверждает, что $P$ является копределом $D_P$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Ко- лемма Йонеды}
+\begin{proof}
+\only<1>{
+По лемме Йонеды достаточно проверить, что $\Hom(P, -) \simeq \Hom(\colim\,D_P, -)$.
+У нас есть следующая последовательность биекций.
+\begin{align*}
+\Hom(\colim_{(a,x) \in J}(\y a), R) & \simeq \\
+\limit_{(a,x) \in J} \Hom(\y a, R) & \simeq \\
+\limit_{(a,x) \in J} R_a & .
+\end{align*}
+}
+
+\only<2>{
+Нужно проверить, что $\Hom(P,R) \simeq \limit_{(a,x) \in J} R_a$, и эта биекция естественна по $R$.
+
+Но элементы множества $\Hom(P,R)$ -- это естественные преобразования, то есть функции, которые каждому $a \in Ob(\C)$ и $x \in P_a$ сопоставляют элемент $R_a$ и удовлетворяют условию естественности.
+
+С другой стороны, множество $\limit_{(a,x) \in J} R_a$ состоит из таких же функций $\alpha$, удовлетворяющих условию,
+что для любого $f : a \to b$ если $P(f)(y) = x$, то  $\alpha(a,x) = R(f)(\alpha(b,y))$.
+Это условие в точности условие естественности $\alpha$.
+
+Естественность по $R$ проверяется напрямую.
+}
+\alt<2>{\qedhere}{\phantom\qedhere}
+\end{proof}
+\end{frame}
+
+\section{Категории предпучков}
+
+\begin{frame}
+\frametitle{Примеры}
+\begin{itemize}
+\item \emph{Предпучок} на малой категории $\C$ -- это функтор $\C^{op} \to \Set$. Категория предпучков -- это категория функторов $\Set^{\C^{op}}$.
+\item Если $P$ -- предпучок на $\C$ и $a$ -- объект $\C$, то мы будем писать $P_a$ вместо $P(a)$.
+\item Категория графов -- это категория предпучков.
+\item Категория последовательностей множеств
+\[ \xymatrix{X_1 \ar[r] & X_2 \ar[r] & X_3 \ar[r] & \ldots } \]
+является категорией предпучков.
+\item Категория действий группы $G$ -- категория предпучков на $G$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Свойства категорий предпучков}
+\begin{itemize}
+\item Категории предпучков полные и кополные.
+\item Действительно, в категориях функторов пределы и копределы считаются поточечно.
+\item Категории предпучков декартовы замкнуты.
+\item Действительно, пусть $P$, $R$ -- предпучки на $\C$.
+Если $R^P$ существует, то для любого $a \in \C$ должно быть верно
+\[ (R^P)_a \simeq \Hom(\y a, R^P) \simeq \Hom(\y a \times P, R) \]
+\item Мы можем использовать это свойство как определение $R^P$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Доказательство}
+Мы уже видели, что свойство экспоненты верно для представимых функторов.
+Осталось проверить для произвольных:
+\begin{align*}
+\Hom(X,R^P) & \simeq \\
+\Hom(\colim_a(\y a),R^P) & \simeq \\
+\limit_a(\Hom(\y a,R^P)) & \simeq \\
+\limit_a(\Hom(\y a \times P, R)) & \simeq \\
+\Hom(\colim_a(\y a \times P), R) & \simeq \\
+\Hom(\colim_a(\y a) \times P, R) & \simeq \\
+\Hom(X \times P, R) &
+\end{align*}
+\end{frame}
+
+\begin{frame}
+\frametitle{Генераторы категории}
+\begin{itemize}
+\item Коллекция $S$ объектов категории $\C$ называется ее \emph{генератором}, если для любой пары морфизмов $f,g : A \to B$ верно, что
+если $f \circ s = g \circ s$ для любого морфизма $s$ с доменом в $S$, то $f$ = $g$.
+\item Другими словами, чтобы проверить равенство двух стрелок, достаточно проверить их равенство на объектах из $S$.
+\item Если $S$ является генератором категории $\C$ и $x \in S$, то морфизмы вида $x \to a$ называют \emph{обобщенными элементами} объекта $a$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Примеры генераторов}
+\begin{itemize}
+\item В $\Set$ генератором является множество, состоящее из одного одноэлементного множества.
+\item В $\Grp$ генератором является $\mathbb{Z}$.
+\item Обощенные элементы для этого генератора -- это просто элементы множества.
+\item Коллекция объектов вида $\y a$ является генератором для категории предпучков.
+\end{itemize}
+\end{frame}
+
+\section{Примеры}
+
+\subsection{Категория графов}
+
+\begin{frame}
+\frametitle{Категория графов $\cat{Graph}$}
+\begin{itemize}
+\item В этом разделе мы просто разберем подробно пример категории графов.
+\item Граф $G$ состоит из множества вершин $G_V$, множества ребер $G_E$ и пары функций $d,c : G_E \to G_V$, сопостовляющих каждому ребру его начало и конец.
+\item Таким образом, категория графов $\cat{Graph}$ -- это категория предпучков на категории $\C$, состоящей из двух объектов $V$ и $E$ и двух не тождественных морфизмов.
+\[ \xymatrix{ V \ar@<-.5ex>[r]_c \ar@<.5ex>[r]^d & E } \]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Лемма Йонеды для $\cat{Graph}$}
+\begin{itemize}
+\item Вложение Йонеды говорит, что категория $\C$ вкладывается в категорию графов.
+\item $\y V$ -- это граф, состоящий из одной вершины.
+\item $\y E$ -- это граф, состоящий из одного ребра.
+\item $\y d$ и $\y c$ -- функции, отображающие единственную вершину графа $\y V$ в левый или правый конец единственного ребра графа $\y E$.
+\item Лемма Йонеды говорит, что $\Hom_{\cat{Graph}}(\y V, G) \simeq G_V$.
+\item Действительно, морфизмы из графа $\y V$ в $G$ -- это в точности вершины графа $G$.
+\item Лемма Йонеды говорит, что $\Hom_{\cat{Graph}}(\y E, G) \simeq G_E$.
+\item Действительно, морфизмы из графа $\y E$ в $G$ -- это в точности ребра графа $G$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Ко- лемма Йонеды для $\cat{Graph}$}
+\begin{itemize}
+\item О копределах можно думать геометрически.
+\item Например, если $G_1$ -- подграф графов $G_2$ и $G_3$, то пушаут $G_2 \amalg_{G_1} G_3$ -- это граф, ``склеенный'' из $G_2$ и $G_3$ вдоль $G_1$.
+\item Таким, образом ко- лемма Йонеды говорит, что любой предпучок можно ``склеить'' из представимых предпучков.
+\item В случае с графами это означает, что любой граф можно склеить из графов $\y V$ и $\y E$.
+\item Действительно, любой граф можно склеить из вершин и ребер, которые в нем содержатся.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Генераторы в категории графов}
+\begin{itemize}
+\item Коллекция графов $\{ \y V, \y E \}$ является генератором категории $\cat{Graph}$.
+\item Действительно, чтобы проверить, что морфизмы графов $f,g : G \to H$ равны, достаточно проверить, что они совпадают на вершинах и на ребрах.
+\item Другими словами, достаточно проверить, что они совпадают на морфизмах из $\y V$ и $\y E$.
+\item Обобщенный элемент для этого генератора -- это либо вершина графа (обобщенный элемент вида $\y V$), либо его ребро (обощенный элемент вида $\y E$).
+\end{itemize}
+\end{frame}
+
+\subsection{Категория глобулярных множеств}
+
+\begin{frame}
+\frametitle{Категория глобулярных множеств $\cat{Glob}$}
+\begin{itemize}
+\item Глобулярное множество -- это предпучок на следующей категории:
+\[ \xymatrix{ 0 \ar@<-.5ex>[r]_{t_0} \ar@<.5ex>[r]^{s_0} & 1 \ar@<-.5ex>[r]_{t_1} \ar@<.5ex>[r]^{s_1} & 2 \ar@<-.5ex>[r]_{t_2} \ar@<.5ex>[r]^{s_2} & \ldots } \]
+где $s_{i+1} \circ s_i = t_{i+1} \circ s_i$ и $s_{i+1} \circ t_i = t_{i+1} \circ t_i$.
+\item Другими словами, объекты этой категории -- натуральные числа, $\Hom(n,n) = \{ id_n \}$, $\Hom(n,k) = \varnothing$ если $n > k$, и $\Hom(n,k)$ состоит из двух элементов, если $n < k$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Лемма Йонеды для $\cat{Glob}$}
+\begin{itemize}
+\item О глобулярных множествах вида $\y n$ можно думать как о $n$-мерных шарах.
+\item $\y 0$ -- точки, $\y 1$ -- отрезки, $\y 2$ -- диски, $\y 3$ -- 3-мерные шары, и т.д.
+\item $\y s_n$ вкладывает $n$-мерный шар в верхнюю половну границы $(n+1)$-мерного шара.
+\item $\y t_n$ вкладывает $n$-мерный шар в нижнюю половну границы $(n+1)$-мерного шара.
+\item Таким образом, $\y s_n$ и $\y t_n$ пересекаются по $(n-1)$-мерным шарам.
+\item Лемма Йонеды говорит, что если $X$ -- глобулярное множество, то $\Hom(\y n, X)$ изоморфно множеству $X_n$ его $n$-мерных шаров.
+\item Ко- лемма Йонеды говорит, что любое глобулярное множество склеено из шаров.
+\end{itemize}
+\end{frame}
+
+\end{document}
