@@ -91,7 +91,7 @@ a *** SM asms = SM [(a `mappend` a', m) | (a', m) <- asms]
 -}
 
 interpretSemimodule :: (Monoid a, Monoid m) => (a -> m -> m) -> Semimodule a m -> m
-interpretSemimodule p (SM asms) = foldl (\acc (a, m) -> acc `mappend` p a m) mempty asms
+interpretSemimodule p (SM asms) = foldMap (uncurry p) asms
 
 instance Monoid a => Functor (Semimodule a) where
     fmap = liftM
