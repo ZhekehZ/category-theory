@@ -85,7 +85,7 @@ SM a +++ SM b = SM $ a ++ b
 a *** SM asms = SM [(a `mappend` a', m) | (a', m) <- asms]
 
 {-
-    r *** (x +++ y) == (r *** x) +++ (r +++ y) -- ok
+    r *** (x +++ y) == (r *** x) +++ (r *** y) -- ok
     (r `mappend` s) *** x == r *** (s *** x)   -- ok
     mempty *** x = x                           -- ok
 -}
@@ -111,3 +111,49 @@ instance Monoid a => Monad (Semimodule a) where
 -}
 
 
+-- Task08
+
+newtype Semimodule2 a m = SM2 { f :: a -> m } 
+                                -- where f is homomorphism
+                                -- f rzero == mempty
+                                -- f (a `rplus` b) = f a `mappend` f b
+
+class Ring r where
+    rzero :: r
+    rone :: r
+    rplus :: r -> r -> r
+    rmult :: r -> r -> r
+
+szero :: (Ring a, Monoid m) => Semimodule2 a m
+szero = SM2 $ \a -> mempty
+
+(+-+) :: (Ring a, Monoid m) => Semimodule2 a m -> Semimodule2 a m -> Semimodule2 a m
+SM2 f +-+ SM2 g = SM2 $ \a -> f a `mappend` g a
+
+(*-*) :: (Ring a, Monoid m) => a -> Semimodule2 a m -> Semimodule2 a m
+a *-* SM2 f = SM2 $ \a' -> f (a `rmult` a')
+
+{-
+    r *-* (x +-+ y) == (r *-* x) +-+ (r *-* y)      -- ok
+    (r `rplus` s) *-* x == (r *-* x) +-+ (s *-* x)  -- ok
+    rzero *-* x = mempty                            -- ok
+    (r `rmult` s) *-* x == r *-* (s *-* x)          -- ok
+    rone *-* x = x                                  -- ok
+-}
+
+instance Ring a => Functor (Semimodule2 a) where
+    fmap = liftM
+
+instance Ring a => Applicative (Semimodule2 a) where
+    pure = return
+    (<*>) = ap
+
+instance Ring a => Monad (Semimodule2 a) where
+    return m = SM2 (\a -> m)
+    SM2 g >>= k = SM2 $ \a -> f (k (g a)) a 
+
+{-
+    return a >>= h == h a                       -- ok
+    m >>= return == m                           -- ok 
+    (m >>= g) >>= h == m >>= (\x -> g x >>= h)  -- ok   
+-}
