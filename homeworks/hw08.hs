@@ -71,3 +71,43 @@ normalizeStep (Lam t) = Lam <$> normalizeStep t
 
 normalize :: Term a -> Term a
 normalize t = maybe t normalize (normalizeStep t) 
+
+
+
+-- Task 07
+
+newtype Semimodule a m = SM { unSM :: [(a, m)] }
+
+(+++) :: Monoid a => Semimodule a m -> Semimodule a m -> Semimodule a m
+SM a +++ SM b = SM $ a ++ b
+
+(***) :: Monoid a => a -> Semimodule a m -> Semimodule a m
+a *** SM asms = SM [(a `mappend` a', m) | (a', m) <- asms]
+
+{-
+    r *** (x +++ y) == (r *** x) +++ (r +++ y) -- ok
+    (r `mappend` s) *** x == r *** (s *** x)   -- ok
+    mempty *** x = x                           -- ok
+-}
+
+interpretSemimodule :: (Monoid a, Monoid m) => (a -> m -> m) -> Semimodule a m -> m
+interpretSemimodule p (SM asms) = foldl (\acc (a, m) -> acc `mappend` p a m) mempty asms
+
+instance Monoid a => Functor (Semimodule a) where
+    fmap = liftM
+
+instance Monoid a => Applicative (Semimodule a) where
+    pure = return
+    (<*>) = ap
+
+instance Monoid a => Monad (Semimodule a) where
+    return m = SM [(mempty, m)]
+    SM ms >>= k = SM [(a1 `mappend` a2, nm) | (a1, om) <- ms, (a2, nm) <- unSM (k om)]
+
+{-
+    return a >>= h == h a                       -- ok
+    m >>= return == m                           -- ok
+    (m >>= g) >>= h == m >>= (\x -> g x >>= h)  -- ok  
+-}
+
+
