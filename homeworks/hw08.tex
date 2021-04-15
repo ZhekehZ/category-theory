@@ -75,27 +75,38 @@ $\mathcal{A} = \{ src ~(id~x) = x,~~ dst ~(id~x) = x\}$
 
 \item Докажите, что для любой малой категории $\C$ категория функторов $\Set^{\C^\fs{op}}$ эквивалентна категории моделей некоторой алгебраической \tolerant{500}{ теории. }
 
+Определим теорию $T$:\\
+$T = (\mathcal{S}, \mathcal{F}, \mathcal{A}):$\\
+$\mathcal{S} = Ob(\C)$\\
+$\mathcal{F} = \{f_h^{AB}~:~ A \to B ~|~ h \in Hom_\C(A, B)~\forall~A,B\in\C\}$\\
+$\mathcal{A} = \{f_{id}^{AA}(x) = x,~~f_f^{BC}(f_g^{AB}(a)) = f_{f\circ g}^{AC}(a)\}$
+
+Теперь определим функтор $F : \Set^{\C^{op}} \to T\text{-}Mod$:\\\\
+На объектах (функторах):\\
+$F(f) = M$, где \\
 $
-T = (\mathcal{S},\mathcal{F}, \mathcal{A})\\
-\mathcal{S} = \{f, c, ch, s\}\\
-\mathcal{F}:\\
 \begin{matrix*}[l]
-app_{Ob} ~:~  f \to c \to s\\
-app_{Hom} ~:~ f \to ch \to (s \to s)\\
-\circ_c ~:~ ch \to ch \to ch\\
-id_c ~:~ c \to ch\\
-src~:~ ch \to c\\
-dst~:~ ch \to c\\
-\end{matrix*}\\
-\mathcal{A}:\\
-\begin{matrix*}[l]
-app_{Hom}~F~(f~\circ_c~g)~x = app_{Hom}~F~f~(app_{Hom}~F~g~x)\\
-app_{Hom}~F~(id_c~c)~x = x\\
-src~(id~c) = c\\
-dst~(id~c) = c\\
-(f~\circ_c~g)~\circ_c~h = f~\circ_c~(g~\circ_c~h)
+&M(A) = f(A)\\
+&M(f_h^{AB}) = f(h)
 \end{matrix*}
-$\\
+$\\\\
+На морфизмах (естественных преобразованиях):\\
+$F(\alpha) = \alpha$	
+
+Определение корректно: пусть $F(f) = M, F(g) = N$. Тогда:\\
+$\alpha_B(M(f_h^{AB})(a)) = \alpha_B(f(h)(a)) = g(h)(\alpha_A(a)) = N(f_h^{AB})(\alpha_A(a))$\\
+в силу естественности $\alpha$:
+\[
+\xymatrix{
+f(A) \ar[r]^{\alpha_A} \ar[d]^{f(h)} & g(A) \ar[d]^{g(h)}\\
+f(B) \ar[r]^{\alpha_B} & g(B) \\
+}
+\]
+
+Из определения $F$ на морфизмах очевидно, что \\$Hom(A, B) = Hom(F(A), F(B))$. Более того, можно построить функтор $U:  T\text{-}Mod \to \Set^{\C^{op}}$:\\
+$U(M) = f, ~wehre~f(A) = M(A),~~f(h^{\in Hom(A, B)}) = M(f_h^{AB})$\\
+$U(\alpha) = \alpha$.\\
+Тогда $F\circ U = id, ~~U \circ F = id$. Значит категории изоморфны, а значит и эквивалентны.
 
 
 \item Докажите, что категория $\Mod{\fs{Mon}}(\Mod{\fs{Mon}})$ моноидов в категории моноидов (в $\Set$) изоморфна категории коммутативных моноидов (в $\Set$).
