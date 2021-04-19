@@ -9,7 +9,7 @@ class Group a where
     (<>) :: a -> a -> a
     inv :: a -> a
 
-data SetAbGroup a = SAG [a] [a] -- Grothendieck group of monoid of sets
+data SetAbGroup a = SAG [a] [a] deriving Eq -- Grothendieck group of monoid of sets
 
 instance Eq a => Group (SetAbGroup a) where -- Abelian group is the same
     zro = SAG [] []
@@ -31,13 +31,6 @@ instance Monad SetAbGroup where
             concatAll1 (SAG xs1 ys1 : SAG xs2 ys2 : ss) = concatAll1 (SAG (xs1 ++ xs2) (ys1 ++ ys2) : ss) 
             (SAG psp psn) = concatAll1 (k <$> ps)
             (SAG nsp nsn) = concatAll1 (k <$> ns)
-
-instance Eq a => Eq (SetAbGroup a) where
-    SAG p1 n1 == SAG p2 n2 = null diffPos && null diffNeg
-        where 
-            diff x1 x2 = (x1 \\ x2) `union` (x2 \\ x1)
-            diffPos = diff (p1 \\ n1) (p2 \\ n2)  
-            diffNeg = diff (n1 \\ p1) (n2 \\ p2)  
 
 
 -- Task 09
