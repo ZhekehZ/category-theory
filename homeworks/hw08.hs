@@ -1,6 +1,6 @@
 -- Task 06
 
-import Data.List ((\\), union, intersect)
+import Data.List ((\\), union, intersect, nub)
 import Control.Monad (ap, liftM)
 import Control.Applicative
 
@@ -9,7 +9,7 @@ class Group a where
     (<>) :: a -> a -> a
     inv :: a -> a
 
-data SetAbGroup a = SAG [a] [a] deriving Eq -- Grothendieck group of monoid of sets
+data SetAbGroup a = SAG [a] [a] -- Grothendieck group of monoid of sets
 
 instance Eq a => Group (SetAbGroup a) where -- Abelian group is the same
     zro = SAG [] []
@@ -31,6 +31,12 @@ instance Monad SetAbGroup where
             concatAll1 (SAG xs1 ys1 : SAG xs2 ys2 : ss) = concatAll1 (SAG (xs1 ++ xs2) (ys1 ++ ys2) : ss) 
             (SAG psp psn) = concatAll1 (k <$> ps)
             (SAG nsp nsn) = concatAll1 (k <$> ns)
+
+
+instance Eq a => Eq (SetAbGroup a) where
+    SAG pa na == SAG pb nb = all (\cx -> cx pa - cx na == cx pb - cx nb) 
+                                 (fmap count . nub $ pa ++ na ++ pb ++ nb)
+        where count x = length . filter (== x)
 
 
 -- Task 09
