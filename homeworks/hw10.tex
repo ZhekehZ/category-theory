@@ -171,6 +171,16 @@ $\mathcal{T} = \{\Sigma, \mathcal{A}\}$ -- регулярная теория
 
 \item Опишите интерпретацию импликации, кванторов и равенства в $\Set$.
 
+$
+\begin{matrix*}[l]
+\llbracket a \to b \rrbracket = \llbracket \neg a \lor b \rrbracket \\\\
+\llbracket a = b \rrbracket = \llbracket (a \to b) \land (b \to a)\rrbracket\\\\
+\llbracket \forall a~\phi(a) \rrbracket = \bigcap\limits_a \llbracket \phi(a) \rrbracket\\\\
+\llbracket \exists a~\phi(a) \rrbracket = \llbracket \neg (\forall a~\neg \phi(a)) \rrbracket
+\end{matrix*}
+$
+
+
 \item Докажите корректность следующего правила вывода
 \begin{center}
 \AxiomC{$\varphi \sststile{}{V} a = b$}
