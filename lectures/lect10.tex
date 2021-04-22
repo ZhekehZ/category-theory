@@ -1,0 +1,526 @@
+\documentclass{beamer}
+
+\usepackage{etex}
+\usepackage[english,russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[all]{xy}
+\usepackage{ifthen}
+\usepackage{xargs}
+\usepackage{stmaryrd}
+\usepackage{bussproofs}
+\usepackage{turnstile}
+
+\usetheme{Szeged}
+% \usetheme{Montpellier}
+% \usetheme{Malmoe}
+% \usetheme{Berkeley}
+% \usetheme{Hannover}
+\usecolortheme{beaver}
+
+\renewcommand{\turnstile}[6][s]
+    {\ifthenelse{\equal{#1}{d}}
+        {\sbox{\first}{$\displaystyle{#4}$}
+        \sbox{\second}{$\displaystyle{#5}$}}{}
+    \ifthenelse{\equal{#1}{t}}
+        {\sbox{\first}{$\textstyle{#4}$}
+        \sbox{\second}{$\textstyle{#5}$}}{}
+    \ifthenelse{\equal{#1}{s}}
+        {\sbox{\first}{$\scriptstyle{#4}$}
+        \sbox{\second}{$\scriptstyle{#5}$}}{}
+    \ifthenelse{\equal{#1}{ss}}
+        {\sbox{\first}{$\scriptscriptstyle{#4}$}
+        \sbox{\second}{$\scriptscriptstyle{#5}$}}{}
+    \setlength{\dashthickness}{0.111ex}
+    \setlength{\ddashthickness}{0.35ex}
+    \setlength{\leasturnstilewidth}{2em}
+    \setlength{\extrawidth}{0.2em}
+    \ifthenelse{%
+      \equal{#3}{n}}{\setlength{\tinyverdistance}{0ex}}{}
+    \ifthenelse{%
+      \equal{#3}{s}}{\setlength{\tinyverdistance}{0.5\dashthickness}}{}
+    \ifthenelse{%
+      \equal{#3}{d}}{\setlength{\tinyverdistance}{0.5\ddashthickness}
+        \addtolength{\tinyverdistance}{\dashthickness}}{}
+    \ifthenelse{%
+      \equal{#3}{t}}{\setlength{\tinyverdistance}{1.5\dashthickness}
+        \addtolength{\tinyverdistance}{\ddashthickness}}{}
+        \setlength{\verdistance}{0.4ex}
+        \settoheight{\lengthvar}{\usebox{\first}}
+        \setlength{\raisedown}{-\lengthvar}
+        \addtolength{\raisedown}{-\tinyverdistance}
+        \addtolength{\raisedown}{-\verdistance}
+        \settodepth{\raiseup}{\usebox{\second}}
+        \addtolength{\raiseup}{\tinyverdistance}
+        \addtolength{\raiseup}{\verdistance}
+        \setlength{\lift}{0.8ex}
+        \settowidth{\firstwidth}{\usebox{\first}}
+        \settowidth{\secondwidth}{\usebox{\second}}
+        \ifthenelse{\lengthtest{\firstwidth = 0ex}
+            \and
+            \lengthtest{\secondwidth = 0ex}}
+                {\setlength{\turnstilewidth}{\leasturnstilewidth}}
+                {\setlength{\turnstilewidth}{2\extrawidth}
+        \ifthenelse{\lengthtest{\firstwidth < \secondwidth}}
+            {\addtolength{\turnstilewidth}{\secondwidth}}
+            {\addtolength{\turnstilewidth}{\firstwidth}}}
+        \ifthenelse{\lengthtest{\turnstilewidth < \leasturnstilewidth}}{\setlength{\turnstilewidth}{\leasturnstilewidth}}{}
+    \setlength{\turnstileheight}{1.5ex}
+    \sbox{\turnstilebox}
+    {\raisebox{\lift}{\ensuremath{
+        \makever{#2}{\dashthickness}{\turnstileheight}{\ddashthickness}
+        \makehor{#3}{\dashthickness}{\turnstilewidth}{\ddashthickness}
+        \hspace{-\turnstilewidth}
+        \raisebox{\raisedown}
+        {\makebox[\turnstilewidth]{\usebox{\first}}}
+            \hspace{-\turnstilewidth}
+            \raisebox{\raiseup}
+            {\makebox[\turnstilewidth]{\usebox{\second}}}
+        \makever{#6}{\dashthickness}{\turnstileheight}{\ddashthickness}}}}
+        \mathrel{\usebox{\turnstilebox}}}
+
+\newcommand{\newref}[4][]{
+\ifthenelse{\equal{#1}{}}{\newtheorem{h#2}[hthm]{#4}}{\newtheorem{h#2}{#4}[#1]}
+\expandafter\newcommand\csname r#2\endcsname[1]{#4~\ref{#2:##1}}
+\newenvironmentx{#2}[2][1=,2=]{
+\ifthenelse{\equal{##2}{}}{\begin{h#2}}{\begin{h#2}[##2]}
+\ifthenelse{\equal{##1}{}}{}{\label{#2:##1}}
+}{\end{h#2}}
+}
+
+\newref[section]{thm}{theorem}{Theorem}
+\newref{lem}{lemma}{Lemma}
+\newref{prop}{proposition}{Proposition}
+\newref{cor}{corollary}{Corollary}
+
+\theoremstyle{definition}
+\newref{defn}{definition}{Definition}
+
+\newcommand{\cat}[1]{\mathbf{#1}}
+\renewcommand{\C}{\cat{C}}
+\newcommand{\y}{\cat{y}}
+\newcommand{\D}{\cat{D}}
+\newcommand{\E}{\cat{E}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\Grp}{\cat{Grp}}
+\newcommand{\Mon}{\cat{Mon}}
+\newcommand{\Ab}{\cat{Ab}}
+\newcommand{\Ring}{\cat{Ring}}
+\renewcommand{\Vec}{\cat{Vec}}
+\newcommand{\Mat}{\cat{Mat}}
+\newcommand{\Num}{\cat{Num}}
+\newcommand{\red}{\Rightarrow}
+\renewcommand{\ll}{\llbracket}
+\newcommand{\rr}{\rrbracket}
+\newcommand{\Mod}[1]{#1\text{-}\cat{Mod}}
+\newcommand{\repl}{:=}
+
+\newcommand{\fs}[1]{\mathrm{#1}}
+\newcommand{\im}{\mathrm{Im}}
+\newcommand{\bool}{\mathrm{Bool}}
+\newcommand{\true}{\mathrm{true}}
+\newcommand{\false}{\mathrm{false}}
+
+\newcommand{\ev}{\mathrm{ev}}
+\newcommand{\zero}{\mathrm{zero}}
+\newcommand{\suc}{\mathrm{suc}}
+\newcommand{\fst}{\pi_1}
+\newcommand{\snd}{\pi_2}
+\newcommand{\unit}{\mathrm{unit}}
+
+\newcommand{\pb}[1][dr]{\save*!/#1-1.2pc/#1:(-1,1)@^{|-}\restore}
+\newcommand{\po}[1][dr]{\save*!/#1+1.2pc/#1:(1,-1)@^{|-}\restore}
+
+\AtBeginSection[]
+{
+\begin{frame}[c,plain,noframenumbering]
+\frametitle{План лекции}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\makeatletter
+\defbeamertemplate*{footline}{my theme}{
+    \leavevmode
+}
+\makeatother
+
+\begin{document}
+
+\title{Теория категорий}
+\subtitle{Категориальная логика}
+\author{Валерий Исаев}
+\date{28 апреля 2017 г.}
+\maketitle
+
+\section{Интерпретация лямбда исчисления}
+
+\begin{frame}
+\frametitle{Мотивация}
+\begin{itemize}
+\item Лямбда исчисление предоставляет синтаксис для (декартово замкнутых) категорий, а категории предоставляют семантику лямбда исчисления.
+\item С одной стороны, лямбда исчисление позволяет просто описывать различные конструкции в категориях.
+\item С другой стороны, различные конструкции в категориях могут мотивировать новые языковые конструкции для лямбда исчисления.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Термы лямбда исчисления}
+\begin{itemize}
+\item Типы строятся индуктивно из двух бинарных функций $\times$ и $\to$, одной константы $\top$ и базовых типов, множество которых мы будем обозначать $\mathcal{S}$.
+\item Термы строятся индуктивно согласно следующим правилам:
+\begin{center}
+\AxiomC{}
+\UnaryInfC{$\vdash$}
+\DisplayProof
+\quad
+\AxiomC{$\Gamma \vdash$}
+\RightLabel{, $x \notin \Gamma$}
+\UnaryInfC{$\Gamma, x : A \vdash$}
+\DisplayProof
+\quad
+\AxiomC{$\Gamma \vdash$}
+\RightLabel{, $(x : A) \in \Gamma$}
+\UnaryInfC{$\Gamma \vdash x : A$}
+\DisplayProof
+\end{center}
+\end{itemize}
+
+\begin{center}
+\AxiomC{$\Gamma \vdash$}
+\UnaryInfC{$\Gamma \vdash \unit : \top$}
+\DisplayProof
+\quad
+\AxiomC{$\Gamma \vdash a : A$}
+\AxiomC{$\Gamma \vdash b : B$}
+\BinaryInfC{$\Gamma \vdash (a,b) : A \times B$}
+\DisplayProof
+\end{center}
+
+\begin{center}
+\AxiomC{$\Gamma \vdash p : A \times B$}
+\UnaryInfC{$\Gamma \vdash \fst\,p : A$}
+\DisplayProof
+\quad
+\AxiomC{$\Gamma \vdash p : A \times B$}
+\UnaryInfC{$\Gamma \vdash \snd\,p : B$}
+\DisplayProof
+\end{center}
+
+\begin{center}
+\AxiomC{$\Gamma, x : A \vdash b : B$}
+\UnaryInfC{$\Gamma \vdash \lambda x. b : A \to B$}
+\DisplayProof
+\quad
+\AxiomC{$\Gamma \vdash f : A \to B$}
+\AxiomC{$\Gamma \vdash a : A$}
+\BinaryInfC{$\Gamma \vdash f\,a : B$}
+\DisplayProof
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Аксиомы лямбда исчисления}
+Кроме того, у нас есть следующие аксиомы:
+\begin{center}
+\AxiomC{$\Gamma \vdash a : A$}
+\AxiomC{$\Gamma \vdash b : B$}
+\BinaryInfC{$\Gamma \vdash \fst\,(a,b) \equiv a : A$}
+\DisplayProof
+\quad
+\AxiomC{$\Gamma \vdash a : A$}
+\AxiomC{$\Gamma \vdash b : B$}
+\BinaryInfC{$\Gamma \vdash \snd\,(a,b) \equiv b : B$}
+\DisplayProof
+\end{center}
+
+\begin{center}
+\AxiomC{$\Gamma \vdash t : \top$}
+\UnaryInfC{$\Gamma \vdash \unit \equiv t : \top$}
+\DisplayProof
+\quad
+\AxiomC{$\Gamma \vdash p : A \times B$}
+\UnaryInfC{$\Gamma \vdash (\fst\,p,\,\snd\,p) \equiv p : A \times B$}
+\DisplayProof
+\end{center}
+
+\begin{center}
+\AxiomC{$\Gamma, x : A \vdash b : B$}
+\AxiomC{$\Gamma \vdash a : A$}
+\BinaryInfC{$\Gamma \vdash (\lambda x. b)\,a \equiv b[x \repl a] : B$}
+\DisplayProof
+\quad
+\AxiomC{$\Gamma \vdash f : A \to B$}
+\UnaryInfC{$\Gamma \vdash \lambda x. f\,x \equiv f : A \to B$}
+\DisplayProof
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Интерпретация лямбда исчисления}
+\begin{itemize}
+\item Что является моделями алгебраической теории лямбда исчисления (которую мы так и не построили)?
+\item Это в точности декартово замкнутые категории!
+\item Так как мы точно не определили эту теорию, то мы и не можем доказать это утверждение, но мы хотя бы можем проинтерпретировать лямбда исчисление в произвольной декартовой категории
+(так же как термы теории групп можно проинтерпретировать в произвольной группе).
+\item Пусть $\C$ -- декартово замкнутая категория.
+Тогда мы будем интерпретировать типы как объекты категории, а термы как ее морфизмы.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Интерпретация типов}
+\begin{itemize}
+\item Интерпретацию типов и термов мы будем обозначать как $\ll - \rr$.
+\item Тогда типы интерпретируются следующим образом:
+\begin{align*}
+\ll \top \rr & = 1 \\
+\ll A \times B \rr & = \ll A \rr \times \ll B \rr \\
+\ll A \to B \rr & = \ll B \rr^{\ll A \rr}
+\end{align*}
+\item Если $\Gamma = x_1 : A_1, \ldots x_n : A_n$, то мы можем определить интерпретацию $\Gamma$ как $\ll \Gamma \rr = \ll A_1 \rr \times \ldots \times \ll A_n \rr$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Интерпретация термов}
+\begin{itemize}
+\item Теперь мы определим интерпретацию термов.
+\item Если $\Gamma \vdash a : A$, то $\ll a \rr : \ll \Gamma \rr \to \ll A \rr$.
+\item $\ll x_i \rr = \pi_i$ если $\Gamma = x_1 : A_1, \ldots x_n : A_n$.
+\item $\ll \unit \rr = !_{\ll \Gamma \rr}$.
+\item $\ll (a,b) \rr = \langle \ll a \rr, \ll b \rr \rangle$.
+\item $\ll \fst\,p \rr = \pi_1 \circ \ll p \rr$.
+\item $\ll \snd\,p \rr = \pi_2 \circ \ll p \rr$.
+\item $\ll f\,a \rr = \ev \circ \langle \ll f \rr, \ll a \rr \rangle$, где $\ev : \ll B \rr^{\ll A \rr} \times \ll A \rr \to \ll B \rr$.
+\item $\ll \lambda x. b \rr = \varphi(\ll b \rr)$, где $\varphi : \fs{Hom}(\ll \Gamma \rr \times \ll A \rr, \ll B \rr) \simeq \fs{Hom}(\ll \Gamma \rr, \ll B \rr^{\ll A \rr})$ -- функция каррирования из определения экспонент.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Проверка аксиом}
+\begin{itemize}
+\item Разумеется нам нужно проверить, что эта интерпретация уважает аксиомы.
+\item Для этого сначала нужно доказать лемму, что подстановка интерпретируется как композиция, то есть если $\Gamma, x : A \vdash b : B$ и $\Gamma \vdash a : A$,
+то $\ll b[x := a] \rr = \ll b \rr \circ \langle \fs{id}_{\ll \Gamma \rr}, \ll a \rr \rangle$.
+Это легко сделать индукцией по $b$.
+\item Теперь бета эквивалентность соответствуют тому, что функция каррирования и обратная к ней дают тождественную функцию при композиции,
+а эта эквивалентность соответствует тому, что эти функции дают $\fs{id}$ при композиции в обратном порядке.
+\item Аксиомы для $\top$ и $\times$ легко следуют из определения произведений.
+\end{itemize}
+\end{frame}
+
+\section{Логика и теория типов}
+
+\begin{frame}
+\frametitle{Логика, теория типов и теория категорий}
+\begin{center}
+  \begin{tabular}{ l | c | r }
+    Logic                                   & Type theory                                   & Category \\ \hline
+    algebraic                               & $\top + \times$                               & Cartesian \\
+                                            & $\top + \times + \to$                         & Cartesian closed \\
+    essentially algebraic                   & $\top + \Sigma + \fs{Id}$                     & finitely complete \\
+                                            & $\top + \Sigma + \fs{Id} + \Pi$               & LCC \\
+    regular (=, $\land$, $\top$, $\exists$) & $\top + \Sigma + \fs{Id} + \| - \|$           & regular \\
+    coherent (reg, $\bot$, $\lor$)          & $\text{reg} + 0 + \lor$                       & coherent \\
+    first order (coh, $\to$, $\forall$)     & $\text{coh} + \forall$                        & Heyting \\
+    higher order                            & $\top + \Sigma + \fs{Id} + \Pi + \fs{Prop}$   & elementary topos \\
+  \end{tabular}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Замечания}
+\begin{itemize}
+\item Пусть $T$ -- теория типов из второго столбца.
+Тогда существуют эквивалентности (2-)категорий $\Mod{T} \simeq C \simeq L$, где $C$ -- категория категорий из третьего столбца, а $L$ -- категория теорий логики из первого.
+\item Все теории в первом столбце мультисортные.
+\item Теории в столбце Logic перечеислены в порядке возрастания числа логчиеских связок в них; каждая последующая строчка включает предыдущую.
+\item Все теории типов, начиная с третьей строчки, включают аксиому $K$.
+\item LCC -- это локльно декартово замкнутые категории, то есть такие категории $\C$, что для любого объекта $X$ категория $\C/X$ -- декартово замкнута.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Замечания}
+\begin{itemize}
+\item reg и coh -- это теории, соответствующие строчкам regular и coherent соответственно.
+\item $\to$ и $\Pi$ включают функциональную экстенсиональность.
+\item $\fs{Prop}$ включает пропозициональную экстенсиональность и полноту.
+\item Последняя строчка включает все предыдущие, даже те, для которых нет записи в первом столбце.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Интерпретации теорий}
+\begin{itemize}
+\item Мы уже видели как проинтерпретировать $\top + \times$ в декартовой категории, а $\top + \times + \to$ в декартово замкнутой категории.
+\item Мы (почти) увидим как каждую из теорий типов проинтерпретировать в соответствующей категории.
+\item Для любой логической теории можно определить понятие модели в $\Set$. Это обычное понятие модели.
+\item Но можно определить модели теории и в других категориях, если они удовлетворяют определенным условиям.
+\item Конкретно, для любой теории из первого столбца можно определить категорию моделей в любой категории, удовлетворяющей соответствующему условию из третьего.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Модели теорий}
+\begin{itemize}
+\item Например, мы можем определить категории моноидов, групп, колец, и так далее в любой декартовой категории.
+\item Так как аксиомы полей используют $\bot$, $\exists$ и $\lor$, то поля можно определить в любой когерентной категории.
+\item Если отождествить логическую теорию с соответствующей ей категорией $C$, то модели $C$ в категории $D$ -- это просто функторы $C \to D$, которые сохраняют дополнительную структуру из той строчки таблицы, в которой находятся $C$ и $D$.
+\end{itemize}
+\end{frame}
+
+\section{Интерпретация логических теорий}
+
+\subsection{Логика первого порядка}
+
+\begin{frame}
+\frametitle{Сигнатуры логики первого порядка}
+\emph{Сигнатура} $\Sigma = (\mathcal{S}, \mathcal{F}, \mathcal{P})$ логики первого порядка состоит из:
+\begin{itemize}
+\item Множества $\mathcal{S}$, называемого множеством \emph{сортов}.
+\item Множества $\mathcal{F}$, называемого множеством \emph{функциональных символов}.
+Каждому функциональному символу $f \in \mathcal{F}$ приписана сигнатура вида $f : s_1 \times \ldots \times s_n \to s$, где $s_1, \ldots s_n, s \in \mathcal{S}$.
+\item Множества $\mathcal{P}$, называемого множеством \emph{предикатных символов}.
+Каждому предикатному символу $R \in \mathcal{P}$ приписана сигнатура вида $R : s_1 \times \ldots \times s_n$, где $s_1, \ldots s_n \in \mathcal{S}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Термы логики первого порядка}
+Пусть $V$ -- $\mathcal{S}$-индексированное множество переменных.
+Тогда мы можем определить множество $\fs{Term}_\Sigma(V)_s$ \emph{термов} сорта $s$ индуктивным образом:
+\begin{itemize}
+\item Если $x \in V_s$, то $x \in \fs{Term}_\Sigma(V)_s$.
+\item Если $a_i \in \fs{Term}_\Sigma(V)_{s_i}$ и $(f : s_1 \times \ldots \times s_n \to s) \in \mathcal{F}$, то $f(a_1, \ldots a_n) \in \fs{Term}_\Sigma(V)_s$.
+\end{itemize}
+Конструкцию термов можно доопределить до функтора $\fs{Term}_\Sigma : \Set^\mathcal{S} \to \Set^\mathcal{S}$.
+Более того, на этом функторе существует естественная структура монады.
+Упражнение: определите эту структуру.
+\end{frame}
+
+\begin{frame}
+\frametitle{Формулы логики первого порядка}
+Пусть, как и раньше, $V \in \Set^\mathcal{S}$.
+Теперь мы определим множество $\fs{Form}_\Sigma(V)$ \emph{формул} индуктивным образом:
+\begin{itemize}
+\item Если $a_i \in \fs{Term}_\Sigma(V)_{s_i}$ и $(R : s_1 \times \ldots \times s_n) \in \mathcal{P}$, то $R(a_1, \ldots a_n) \in \fs{Form}_\Sigma(V)$.
+\item Если $a_1,a_2 \in \fs{Term}_\Sigma(V)_s$, то $a_1 = a_2 \in \fs{Form}_\Sigma(V)$.
+\item $\bot, \top \in \fs{Form}_\Sigma(V)$.
+\item Если $\varphi \in \fs{Form}_\Sigma(V)$, то $\neg \varphi \in \fs{Form}_\Sigma(V)$.
+\item Если $\varphi, \psi \in \fs{Form}_\Sigma(V)$, то $\varphi \land \psi, \varphi \lor \psi, \varphi \to \psi \in \fs{Form}_\Sigma(V)$.
+\item Если $\varphi \in \fs{Form}_\Sigma(V \cup \{ x : s \})$, то $\forall (x : s) \varphi, \exists (x : s) \varphi \in \fs{Form}_\Sigma(V)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Теории логики первого порядка}
+\begin{itemize}
+\item \emph{Теория} логики первого порядка состоит из сигнатуры $\Sigma$ и множества аксиом вида $\varphi \sststile{}{V} \psi$,
+где $V$ -- конечное множество переменных, а $\varphi$ и $\psi$ -- формулы такие, что $\fs{FV}(\varphi) \subseteq V$ и $\fs{FV}(\psi) \subseteq V$.
+\item Когда мы рассматриваем логики, более слабые, чем первого порядка, то мы можем ограничить формулы и/или секвенции, которые можно использовать.
+\item О секвенции $\varphi \sststile{}{x_1, \ldots x_n} \psi$ можно думать как о формуле $\forall x_1 \ldots x_n\ (\varphi \to \psi)$.
+\item Если в логике есть импликация, то секвенции можно заменить одной формулой.
+\item Если в логике еще есть квантор всеобщности, то можно считать, что эта формула замкнута.
+\item Таким образом, теории в логике первого порядка обычно определяют как множество замкнутых формул.
+\end{itemize}
+\end{frame}
+
+\subsection{Интерпретация}
+
+\begin{frame}
+\frametitle{Интерпретация сигнатуры}
+Пусть $\C$ -- декартова категория.
+Тогда интерпретация сигнатуры $(\mathcal{S},\mathcal{F},\mathcal{P})$ в $\C$ состоит из следующих данных:
+\begin{itemize}
+\item Функция $\ll - \rr : \mathcal{S} \to Ob(\C)$.
+\item Функция $\ll - \rr$, сопоставляющая каждому $(\sigma : s_1 \times \ldots \times s_n \to s) \in \mathcal{F}$
+морфизм $\ll \sigma \rr : \ll s_1 \rr \times \ldots \times \ll s_n \rr \to \ll s \rr$.
+\item Функция $\ll - \rr$, сопоставляющая каждому $(R : s_1 \times \ldots \times s_n) \in \mathcal{P}$
+мономорфизм $\ll R \rr : d_R \to \ll s_1 \rr \times \ldots \times \ll s_n \rr$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Интерпретация термов}
+Пусть $\C$ -- декартова категория и $\ll - \rr$ -- некоторая интерпретация сигнатуры $(\mathcal{S},\mathcal{F},\mathcal{P})$.
+Если $t$ -- терм этой сигнатуры сорта $s$ со свободными переменными в $\{ x_1 : s_1, \ldots x_n : s_n \}$,
+то мы можем определить его интерпретацию $\ll t \rr : \ll s_1 \rr \times \ldots \times \ll s_n \rr \to \ll s \rr$ следующим образом:
+\begin{itemize}
+\item $\ll x_i \rr = \pi_i$.
+\item $\ll \sigma(t_1, \ldots t_n) \rr = \ll \sigma \rr \circ \langle \ll t_1 \rr, \ldots \ll t_n \rr \rangle$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Модели алгебраических теорий}
+\begin{itemize}
+\item Пусть $\mathcal{A}$ -- алгебраическая теория, то есть множество аксиом вида $t_1 = t_2$.
+\item Тогда модель этой теории в декартовой категории $\C$ -- это интерпретация сигнатуры теории, такая что для любой аксиомы $t_1 = t_2$ верно $\ll t_1 \rr = \ll t_2 \rr$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Интерпретация формул в $\Set$}
+\begin{itemize}
+\item Прежде чем описать интерпретацию формул в произвольной конечно полной категории, вспомним как она описывается в $\Set$.
+\item В $\Set$ формулы интерпретируются как подмножества.
+\item Пусть $\ll - \rr$ сопоставляет каждому $(R : s_1 \times \ldots \times s_n) \in \mathcal{S}$ подмножество множества $\ll s_1 \rr \times \ldots \times \ll s_n \rr$.
+\item Пусть $V = x_1 : s_1$, \ldots $x_k : s_k$ -- упорядоченное множество переменных.
+Тогда функция интерпретации $\ll - \rr$ сопостовляет каждой формуле из $Form_\Sigma(V)$ подмножество множества $\ll s_1 \rr \times \ldots \times \ll s_k \rr$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Интерпретация формул в $\Set$}
+\begin{itemize}
+\item $\ll \bot \rr$ -- пустое подмножество.
+\item $\ll \top \rr$ -- всё множество.
+\item $\ll \neg \varphi \rr$ -- дополнение подмножества $\ll \varphi \rr$.
+\item $\ll \varphi \land \psi \rr = \ll \varphi \rr \cap \ll \psi \rr$.
+\item $\ll \varphi \lor \psi \rr = \ll \varphi \rr \cup \ll \psi \rr$.
+\item Упражнение: опишите интерпретацию импликации, кванторов и равенства.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Истинность формул в $\Set$}
+\begin{itemize}
+\item Интерпретация замкнутой формулы -- это подмножество одноэлементного множества.
+\item Следовательно, либо одноэлементное множество, либо пустое.
+\item В первом случае говорят, что эта формула \emph{истинна} в этой интерпретации, во втором, что она \emph{ложна}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Интерпретация формул в конечно полной категории}
+\begin{itemize}
+\item Пусть $\C$ -- конечно полная категория.
+\item Тогда формулы со свободными переменными в $V$ интерпретируются как подобъекты $\ll V \rr$.
+\item Если $\ll t_1 \rr, \ll t_2 \rr : \ll s_1 \rr \times \ldots \times \ll s_n \rr \to \ll s \rr$, то формула $t_1 = t_2$ интерпретируется как уравнитель $\ll t_1 \rr$ и $\ll t_2 \rr$.
+\item Формула $\varphi = R(t_1, \ldots t_k)$ интерпретируется как пулбэк $\ll R \rr$:
+\[ \xymatrix{ d_\varphi \pb \ar[rr] \ar@{^{(}->}[d]                                & & d_R \ar@{^{(}->}[d]^{\ll R \rr} \\
+              \ll V \rr \ar[rr]_-{\langle \ll t_1 \rr, \ldots \ll t_k \rr \rangle} & & \ll s_1 \rr \times \ldots \times \ll s_k \rr
+            } \]
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Истинность секвенций}
+\begin{itemize}
+\item Мы будем говорить, что секвенция $\varphi \sststile{}{} \psi$ истина в некоторой интерпретации $\ll - \rr$, если подобъект $\ll \varphi \rr$ является подобъектом $\ll \psi \rr$.
+\item В частности мы можем говорить, что формула $\psi$ истина, если истина секвенция $\top \sststile{}{} \psi$; другими словами, если $\ll \psi \rr$ -- максимальный подобъект, то есть изоморфизм.
+\item Модель некоторой теории логики первого порядка -- это интерпретация, такая что все аксиомы в ней истины.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Интерпретация $\top$ и $\land$}
+\begin{itemize}
+\item $\top$ интерпретируется как максимальный объект.
+\item Наибольший подобъект объекта $X$ -- это $id_X$.
+\item $\varphi \land \psi$ интерпретируется как пересечение подобъектов $\ll \varphi \rr$ и $\ll \psi \rr$.
+\end{itemize}
+\end{frame}
+
+\end{document}
