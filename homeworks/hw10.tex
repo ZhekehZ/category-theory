@@ -145,6 +145,13 @@
 \end{center}
 
 \item Определите структуру монады на функторе $\mathrm{Term}_\Sigma$ для любой сигнатуры $\Sigma$.
+
+$\eta = id' : 1 \to T $ --- естественное преобразование, которое возвращает функтор, переводящий переменную в терм из одной переменной
+
+$\mu = id'' : T\circ T \to T$ --- естественное преобразование, которое интерпретирует терм с переменными-термами как один терм
+
+Поскольку $\mu, \eta$ не влияют на структуру терма, диаграммы из определения монады для них коммутируют
+
 \newpage
 \item Определите регулярную теорию, моделями которой являются малые категории.
 
@@ -188,6 +195,16 @@ $
 \BinaryInfC{$\varphi \sststile{}{V} \psi[x := b]$}
 \DisplayProof
 \end{center}
+
+%\[
+%\xymatrix{
+%A \ar@{^{(}->}[rr] \ar@{^{(}->}[d] &&
+%X \ar@{^{(}->}[rr] \ar@{^{(}->}[d] && d_\phi \ar@{^{(}->}[d]^{\llbracket \phi \rrbracket} \\
+%B \ar@{^{(}->}[rr]_{\llbracket a = b \rrbracket} && \llbracket V \rrbracket  \ar@{^{(}->}[rr]_{\langle id, \llbracket a \rrbracket\rangle} && \llbracket V \rrbracket  \times \llbracket s \rrbracket 
+%}
+%\]
+
+
 
 \end{enumerate}
 
