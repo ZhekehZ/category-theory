@@ -202,7 +202,7 @@ $
 \end{matrix*}
 $
 
-
+\newpage
 \item Докажите корректность следующего правила вывода
 \begin{center}
 \AxiomC{$\varphi \sststile{}{V} a = b$}
@@ -211,15 +211,41 @@ $
 \DisplayProof
 \end{center}
 
-%\[
-%\xymatrix{
-%A \ar@{^{(}->}[rr] \ar@{^{(}->}[d] &&
-%X \ar@{^{(}->}[rr] \ar@{^{(}->}[d] && d_\phi \ar@{^{(}->}[d]^{\llbracket \phi \rrbracket} \\
-%B \ar@{^{(}->}[rr]_{\llbracket a = b \rrbracket} && \llbracket V \rrbracket  \ar@{^{(}->}[rr]_{\langle id, \llbracket a \rrbracket\rangle} && \llbracket V \rrbracket  \times \llbracket s \rrbracket 
-%}
-%\]
+Добавим к пулбэку из интерпретации подстановки пулбэк из интерпретации $\land$
+\[
+\xymatrix{
+d_{\psi_{[x := b]} \land a=b}   \ar@{^{(}->}[r]_{g}  \ar@{^{(}->}[d]^{h} &   d_{\psi_{[x := b]}} \ar@{^{(}->}[d]^{\llbracket \psi_{[x := b]} \rrbracket} \ar[r] & d_\psi \ar@{^{(}->}[d]^{\llbracket \psi \rrbracket} \\
+E \ar@{^{(}->}[r]_{\llbracket a = b \rrbracket} &\llbracket V\rrbracket \ar[r]_{\langle id, \llbracket b \rrbracket \rangle} & \llbracket V\rrbracket \times \llbracket s\rrbracket
+}
+\]
 
+Тогда и внешний прямоугольник является пулбэком:
+\[
+\xymatrix{
+d_{\psi_{[x := b]} \land a=b}   \ar@{^{(}->}[r]\ar@{^{(}->}[d]^{h} & d_\psi \ar@{^{(}->}[d]^{\llbracket \psi \rrbracket} \\
+E \ar@{^{(}->}[r]_{\llbracket a = b \rrbracket \circ \langle id, \llbracket b \rrbracket \rangle } & \llbracket V\rrbracket \times \llbracket s\rrbracket
+}
+\]
 
+Но у нас есть такое (левый квадрат -- не пулбэк):
+\[
+\xymatrix{
+\varphi  \ar@{^{(}->}[r]\ar@{^{(}->}[d]^{e} &   d_{\psi_{[x := a]}} \ar@{^{(}->}[d]^{\llbracket \psi_{[x := a]} \rrbracket} \ar[r] & d_\psi \ar@{^{(}->}[d]^{\llbracket \psi \rrbracket} \\
+E \ar@{^{(}->}[r]_{\llbracket a = b \rrbracket} &\llbracket V\rrbracket \ar[r]_{\langle id, \llbracket a \rrbracket \rangle} & \llbracket V\rrbracket \times \llbracket s\rrbracket
+}
+\]
+
+Значит есть такое
+\[
+\xymatrix{
+\varphi  \ar@{^{(}->}[r]\ar@{^{(}->}[d]^{e} & d_\psi \ar@{^{(}->}[d]^{\llbracket \psi \rrbracket} \\
+E \ar@{^{(}->}[r]_{\llbracket a = b \rrbracket \circ \langle id, \llbracket a \rrbracket \rangle} & \llbracket V\rrbracket \times \llbracket s\rrbracket
+}
+\]
+
+Но $ \llbracket a = b \rrbracket \circ \langle id, \llbracket a \rrbracket \rangle = \llbracket a = b \rrbracket \circ  \langle id, \llbracket b \rrbracket \rangle$
+
+Значит $\exists! f : \varphi \to d_{\psi_{[x := b]} \land a=b}$ такой, что ... (если совместить последнюю диаграмму с пуллбэком из второй). Так как $h \circ  f = e$, и $e$ -- моно, значит $f$ -- моно. Значит $g \circ f : \varphi \to d_{\psi_{[x := b]}}$  -- моно, то есть $\varphi \sststile{}{V} \psi[x := b]$.
 
 \end{enumerate}
 
