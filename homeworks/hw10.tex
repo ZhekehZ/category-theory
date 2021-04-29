@@ -144,6 +144,21 @@
 \DisplayProof
 \end{center}
 
+Интерпретация:\\
+$\llbracket zero \rrbracket = zero ~\circ~ !$\\
+$\llbracket suc (n) \rrbracket  = suc \circ \llbracket n\rrbracket $\\
+$\llbracket rec(z,s,n) \rrbracket  = \pi_3 \circ h \circ \langle id,  \llbracket n \rrbracket  \rangle$,
+ где $h:$
+\[
+\xymatrix{
+\Gamma 
+\ar[dr]_{\langle id, zero, z \rangle} 
+\ar[r]^{\langle id, zero \rangle} & \Gamma \times \mathbb{N} \ar@{-->}[d]^{h} \ar[r] ^{\langle id, suc\rangle} & \Gamma\times \mathbb{N} \ar@{-->}[d]^{h}\\
+& \Gamma \times \mathbb{N} \times D \ar[r]_{\langle id, suc, s\rangle} & \Gamma \times \mathbb{N} \times D
+}
+\]
+
+
 \item Определите структуру монады на функторе $\mathrm{Term}_\Sigma$ для любой сигнатуры $\Sigma$.
 
 $\eta = id' : 1 \to T $ --- естественное преобразование, которое возвращает функтор, переводящий переменную в терм из одной переменной
